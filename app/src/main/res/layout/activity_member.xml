@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/myback"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_title" />
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/loading_layout" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/load_failed_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="会员帐号:"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:singleLine="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/tv_member"
+                android:background="@drawable/kuangkuang"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_alignTop="@+id/linearLayout" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:id="@+id/linearLayout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="在线状态:"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+                <RelativeLayout
+                    android:id="@+id/tv_zhuangtai"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/kuangkuang"
+                    android:layout_width="80dp"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_memebr_state"
+                        android:layout_width="wrap_content"
+                        android:text="全部"
+                        android:layout_marginLeft="3dp"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:src="@drawable/xuanzhefan"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_guanli"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="帐号余额:"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/min_money"
+                android:layout_width="75dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/tv_guanli"
+                android:background="@drawable/kuangkuang"
+                android:hint="最小金额"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_gang"
+                android:layout_width="15dp"
+                android:layout_height="1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@+id/min_money"
+                android:background="@color/white" />
+            <EditText
+                android:id="@+id/max_money"
+                android:layout_width="75dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@+id/tv_gang"
+                android:background="@drawable/kuangkuang"
+                android:hint="最大金额"
+                android:textColor="@color/white" />
+            <LinearLayout
+                android:id="@+id/ll_saixuan"
+                android:layout_width="70dp"
+                android:background="@drawable/denglu"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_height="30dp">
+                <TextView
+                    android:id="@+id/shaixuan"
+                    android:layout_width="wrap_content"
+                    android:textSize="18dp"
+                    android:text="筛选"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <view.XListView
+        android:id="@+id/huiyuan_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </view.XListView>
+</LinearLayout>

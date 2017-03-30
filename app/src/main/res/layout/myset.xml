@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/myback"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_title" />
+
+    <RelativeLayout
+        android:id="@+id/xgyhzhxm"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/denglu">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="银行账户姓名" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="29dp"
+            android:src="@drawable/icon_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/xgloginmm"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/denglu">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="修改登录密码" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="29dp"
+            android:src="@drawable/icon_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/xgzjmm"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/denglu">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="修改资金密码" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="29dp"
+            android:src="@drawable/icon_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/safepro"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/denglu">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="安全问题" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="29dp"
+            android:src="@drawable/icon_right" />
+    </RelativeLayout>
+
+    <!--  <RelativeLayout
+          android:id="@+id/cardbdname"
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:layout_marginTop="15dp"
+          android:background="@drawable/denglu"
+           >
+
+          <ImageView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:layout_marginRight="29dp"
+              android:src="@drawable/icon_right"
+              android:id="@+id/imageView" />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="15dp"
+              android:text="绑定卡号姓名"
+              android:layout_alignBottom="@+id/imageView"
+              android:layout_alignParentLeft="true"
+              android:layout_alignParentStart="true"
+              android:layout_marginStart="15dp"
+              android:id="@+id/textView" />
+      </RelativeLayout>-->
+
+
+    <RelativeLayout
+        android:id="@+id/cardbd"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/denglu">
+
+        <TextView
+            android:id="@+id/tv_kahao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="卡号绑定" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="29dp"
+            android:src="@drawable/icon_right" />
+    </RelativeLayout>
+
+    <!-- <RelativeLayout
+         android:id="@+id/inform"
+         android:layout_width="match_parent"
+         android:layout_height="40dp"
+         android:layout_marginTop="15dp"
+        >
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_centerVertical="true"
+             android:layout_marginLeft="15dp"
+             android:text="通知设置" />
+
+         <ToggleButton
+             android:id="@+id/tglSound"
+             android:layout_width="40dp"
+             android:layout_height="20dp"
+             android:layout_alignParentRight="true"
+             android:layout_centerVertical="true"
+             android:layout_marginRight="29dp"
+             android:background="@drawable/selector_butn_toggle"
+             android:textOff=""
+             android:textOn="" />
+     </RelativeLayout>-->
+
+
+    <RelativeLayout
+        android:id="@+id/circleflms"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/denglu">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="圆角分厘模式" />
+
+        <TextView
+            android:id="@+id/ytext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="40dp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/record_back" />
+    </RelativeLayout>
+
+    <!--  <RelativeLayout
+          android:id="@+id/bbgx"
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:layout_marginTop="20dp"
+          android:background="#ffffff" >
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:layout_marginLeft="15dp"
+              android:text="版本更新" />
+
+          <TextView
+              android:id="@+id/dqbb"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:layout_marginRight="20dp"
+              android:text="当前版本v1.0" />
+      </RelativeLayout>-->
+
+    <Button
+        android:id="@+id/bt_tuichu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/denglu"
+        android:text="退出登录"
+        android:textColor="#ffffff" />
+
+
+</LinearLayout>

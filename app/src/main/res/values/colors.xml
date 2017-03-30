@@ -1,0 +1,27 @@
+<resources>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="slidingtab_indicatorcolor">#0084FF</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="textcolor">#A8A8A8</color>
+    <color name="tab_text_color_normal">#B3B3B4</color>
+    <color name="tab_text_color_selected">#282737</color>
+    <color name="text_black">#9B754E</color>
+    <color name="hint_normal">#474542</color>
+    <color name="hint_selected">#888480</color>
+    <color name="golden">#ffc300</color>
+    <color name="transparentt">#00000000</color>
+    <color name="title_color">#FEFEFE</color>
+    <color name="activity_bg">#F3F3F3</color>
+    <color name="activity_line">#703C04</color>
+    <color name="top_des">#818181</color>
+    <color name="background">#F3F3F3</color>
+    <color name="middle_name">#3E3E3E</color>
+    <color name="navpage">#FFE1E8EB</color>
+    <color name="bg_blue">#240b35</color>
+    <color name="bg_line">#BCBCBC</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#4284D9</color>
+</resources>

@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/buyback"
+    android:orientation="vertical">
+        <include
+            layout="@layout/loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/load_failed_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+    <view.XListView
+        android:id="@+id/main_lv_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="50dp"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/change1"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/iv_zhuihaot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/weixuan" />
+
+        <FrameLayout
+            android:id="@+id/fl_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp">
+
+            <TextView
+                android:id="@+id/add_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中奖后停止追号"
+                android:textColor="#ffffff"
+                android:textSize="16dp" />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/add_codez"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中奖后停止追号"
+                android:textColor="#ffffff"
+                android:textSize="16dp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right">
+
+            <ImageView
+                android:id="@+id/add_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/querentouzhu" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

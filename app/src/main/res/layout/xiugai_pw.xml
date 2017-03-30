@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/myback"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_title" />
+
+    <EditText
+        android:id="@+id/pr_mm"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/denglu"
+        android:hint="请输入旧密码"
+        android:password="true"
+        android:singleLine="true"
+        />
+
+    <EditText
+        android:id="@+id/et_mm"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/denglu"
+        android:hint="请输入新密码"
+        android:password="true"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/bt_set"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+       android:background="@drawable/denglu"
+        android:text="确认"
+        android:textColor="#ffffff" />
+
+</LinearLayout>
