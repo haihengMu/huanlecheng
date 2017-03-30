@@ -16,7 +16,6 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,7 +53,6 @@ import util.Utils;
 import view.ClassGridView;
 
 public class HomeFragment extends BaseFragment {
-    private static final String TAG = "HomeFragment";
     private View parentView;
     private Button title_left_btn;
     private TextView title_textview;
@@ -317,6 +315,7 @@ public class HomeFragment extends BaseFragment {
                     R.layout.avdert_item, null);
             ImageView iv = (ImageView) convertView.findViewById(R.id.image);
             // final imgurl vo = ad_list.getAd_list().get(arg1);
+
             il.displayImage(imgurl.get(arg1), iv, getListOptions());
             ((ViewPager) arg0).addView(convertView);
             iv.setOnClickListener(new OnClickListener() {
@@ -438,7 +437,6 @@ public class HomeFragment extends BaseFragment {
             switch (msg.what) {
                 case 0:
                     String str = (String) msg.obj;
-                    Log.e(TAG,str);
                     java.lang.reflect.Type type = new TypeToken<CustomBean>() {
                     }.getType();
                     CustomBean customBean = gson.fromJson(str, type);

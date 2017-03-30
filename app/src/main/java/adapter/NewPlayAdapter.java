@@ -40,13 +40,14 @@ public class NewPlayAdapter extends BaseAdapter {
     private String value;
     private String pid;
 
+
     public NewPlayAdapter(FragmentActivity activity) {
         this.context = activity;
     }
 
     public void setDate(List<NewPlayGameNameChildMode.ListBean> date, String name, String pid) {
         this.date = date;
-        this.pid = pid;
+        this.pid=pid;
         this.name = name;
         notifyDataSetChanged();
     }
@@ -80,8 +81,14 @@ public class NewPlayAdapter extends BaseAdapter {
         Button ou = ViewHolder.get(convertView, R.id.ou);
         Button qing = ViewHolder.get(convertView, R.id.qing);
         LinearLayout kuanglaLayout = ViewHolder.get(convertView, R.id.kuang);
+        if (name.equals("前二大小") || name.equals("后二大小") ||
+                name.equals("一帆风顺") || name.equals("好事成双") ||
+                name.equals("三星报喜") || name.equals("四季发财")) {
+            kuanglaLayout.setVisibility(View.GONE);
+        }else {
+            kuanglaLayout.setVisibility(View.VISIBLE);
+        }
         ClassGridView gridView = ViewHolder.get(convertView, R.id.gridview);
-
         final NewPlayGameNameChildMode.ListBean gm = date.get(position);
         String s = JsonUtil.toJson(gm);
         HashMap<String, Object> stringObjectHashMap = JsonUtil.parseJsonToMap(s);
@@ -91,36 +98,39 @@ public class NewPlayAdapter extends BaseAdapter {
             key = next.getKey();
             Object v = next.getValue();
             value = v + "";
+            Log.e(TAG, "key = " + key + "; value = " + value);
         }
+        if (value.indexOf("\\[")==-1){
+
         String[] arr = value.split("\\[");
         String[] arr1 = arr[1].split("\\]");
-        String a = arr1[0].replace(" ", "");
+        String a=arr1[0].replace(" ","");
         String[] arr2 = a.split(",");
         final List<String> mmlist = new ArrayList<>();
         for (int i = 0; i < arr2.length; i++) {
             mmlist.add(arr2[i]);
         }
-        final NewPlayChildAdapter nca = new NewPlayChildAdapter(context, position);
+        final NewPlayChildAdapter nca = new NewPlayChildAdapter(context);
         gridView.setAdapter(nca);
         bottom_tt.setText(key);
-        nca.setData(mmlist, "", pid);
+        nca.setData(mmlist,"");
         da.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  EventBus.getDefault().post(new FEventBus("da",position+""));
-                String d = "da";
-                nca.setData(mmlist, d, pid);
+              //  EventBus.getDefault().post(new FEventBus("da",position+""));
+                String d="da";
+                nca.setData(mmlist,d);
                 // TODO Auto-generated method stub
-                String numberpostiton = "";
-                for (int i = 0; i < mmlist.size(); i++) {
-                    numberpostiton += mmlist.get(i);
+                String numberpostiton="";
+                for (int i=0;i<mmlist.size();i++){
+                    numberpostiton+=mmlist.get(i);
                 }
                 Intent intent = new Intent();
                 intent.setAction("action.big");
                 intent.putExtra("b", "大");
                 intent.putExtra("position", position + "");
                 intent.putExtra("positionnumber", numberpostiton);
-                intent.putExtra("gpid", pid);
+                intent.putExtra("gpid",pid);
                 context.sendBroadcast(intent);
             }
         });
@@ -129,19 +139,19 @@ public class NewPlayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                EventBus.getDefault().post(new FEventBus("xiao", position + ""));
-                String d = "xiao";
-                nca.setData(mmlist, d, pid);
-                String numberpostiton = "";
-                for (int i = 0; i < mmlist.size(); i++) {
-                    numberpostiton += mmlist.get(i);
+                EventBus.getDefault().post(new FEventBus("xiao",position+""));
+                String d="xiao";
+                nca.setData(mmlist,d);
+                String numberpostiton="";
+                for (int i=0;i<mmlist.size();i++){
+                    numberpostiton+=mmlist.get(i);
                 }
                 Intent intent = new Intent();
                 intent.setAction("action.big");
                 intent.putExtra("b", "小");
-                intent.putExtra("position", position + "");
+                intent.putExtra("position", position+"");
                 intent.putExtra("positionnumber", numberpostiton);
-                intent.putExtra("gpid", pid);
+                intent.putExtra("gpid",pid);
                 context.sendBroadcast(intent);
             }
         });
@@ -149,39 +159,39 @@ public class NewPlayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                EventBus.getDefault().post(new FEventBus("quan", position + ""));
-                String d = "quan";
-                nca.setData(mmlist, d, pid);
-                String numberpostiton = "";
-                for (int i = 0; i < mmlist.size(); i++) {
-                    numberpostiton += mmlist.get(i);
+                EventBus.getDefault().post(new FEventBus("quan",position+""));
+                String d="quan";
+                nca.setData(mmlist,d);
+                String numberpostiton="";
+                for (int i=0;i<mmlist.size();i++){
+                    numberpostiton+=mmlist.get(i);
                 }
                 Intent intent = new Intent();
                 intent.setAction("action.big");
                 intent.putExtra("b", "全");
-                intent.putExtra("position", position + "");
+                intent.putExtra("position", position+"");
                 intent.putExtra("positionnumber", numberpostiton);
-                intent.putExtra("gpid", pid);
+                intent.putExtra("gpid",pid);
                 context.sendBroadcast(intent);
             }
         });
         ji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new FEventBus("ji", position + ""));
-                String d = "ji";
-                nca.setData(mmlist, d, pid);
-                String numberpostiton = "";
-                for (int i = 0; i < mmlist.size(); i++) {
-                    numberpostiton += mmlist.get(i);
+                EventBus.getDefault().post(new FEventBus("ji",position+""));
+                String d="ji";
+                nca.setData(mmlist,d);
+                String numberpostiton="";
+                for (int i=0;i<mmlist.size();i++){
+                    numberpostiton+=mmlist.get(i);
                 }
                 // TODO Auto-generated method stub
                 Intent intent = new Intent();
                 intent.setAction("action.big");
                 intent.putExtra("b", "奇");
-                intent.putExtra("position", position + "");
+                intent.putExtra("position", position+"");
                 intent.putExtra("positionnumber", numberpostiton);
-                intent.putExtra("gpid", pid);
+                intent.putExtra("gpid",pid);
                 context.sendBroadcast(intent);
             }
         });
@@ -190,19 +200,19 @@ public class NewPlayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                // EventBus.getDefault().post(new FEventBus("ou",position+""));
-                String d = "ou";
-                nca.setData(mmlist, d, pid);
-                String numberpostiton = "";
-                for (int i = 0; i < mmlist.size(); i++) {
-                    numberpostiton += mmlist.get(i);
+               // EventBus.getDefault().post(new FEventBus("ou",position+""));
+                String d="ou";
+                nca.setData(mmlist,d);
+                String numberpostiton="";
+                for (int i=0;i<mmlist.size();i++){
+                    numberpostiton+=mmlist.get(i);
                 }
                 Intent intent = new Intent();
                 intent.setAction("action.big");
                 intent.putExtra("b", "偶");
                 intent.putExtra("positionnumber", numberpostiton);
-                intent.putExtra("position", position + "");
-                intent.putExtra("gpid", pid);
+                intent.putExtra("position", position+"");
+                intent.putExtra("gpid",pid);
                 context.sendBroadcast(intent);
             }
         });
@@ -211,20 +221,21 @@ public class NewPlayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                String d = "qing";
-                nca.setData(mmlist, d, pid);
-                String numberpostiton = "";
-                for (int i = 0; i < mmlist.size(); i++) {
-                    numberpostiton += mmlist.get(i);
+                String d="qing";
+                nca.setData(mmlist,d);
+                String numberpostiton="";
+                for (int i=0;i<mmlist.size();i++){
+                    numberpostiton+=mmlist.get(i);
                 }
                 Intent intent = new Intent();
                 intent.setAction("action.big");
                 intent.putExtra("b", "清");
-                intent.putExtra("position", position + "");
-                intent.putExtra("gpid", pid);
+                intent.putExtra("position", position+"");
+                intent.putExtra("gpid",pid);
                 context.sendBroadcast(intent);
             }
         });
+        }
         return convertView;
     }
 

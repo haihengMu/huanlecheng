@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -40,7 +39,6 @@ import util.ShowToast;
 
 public class CustomActivity extends BaseActivity {
 
-    private static final String TAG = "CustomActivity";
     private ArrayList<HXGameNameBean> hxList;
     private CustomAdapter customAdapter;
     private GridView viewBlew;
@@ -85,24 +83,22 @@ public class CustomActivity extends BaseActivity {
         List<NameBean> nameBeanList = caipiaoDao.findAllname();
         upAdapter = new UpAdapter(getApplicationContext());
         cgv_up.setAdapter(upAdapter);
-        if (nameBeanList.size() < 0) {
+        if (nameBeanList.size()<0){
 
-        } else {
+        }else {
             upAdapter.setData(nameBeanList);
         }
 
     }
-
     private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals("action.gradview")) {
+            if (action.equals("action.gradview")){
                 initUp();
             }
         }
     };
-
     /**
      * 初始化自定义彩种
      */
@@ -114,7 +110,7 @@ public class CustomActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
-
+              
             }
         });
         customAdapter = new CustomAdapter(getApplicationContext());
@@ -127,7 +123,7 @@ public class CustomActivity extends BaseActivity {
         params.put("Model", "System");
         params.put("Action", "GetSystemConfig");
         params.put("models", "HX_Game_Name");*/
-        wh.post(Constants.getUrl() + Constants.game_play, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl()+Constants.game_play, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -173,7 +169,6 @@ public class CustomActivity extends BaseActivity {
                     java.lang.reflect.Type type = new TypeToken<CustomBean>() {
                     }.getType();
                     String str = (String) msg.obj;
-                    Log.e(TAG, str);
                     Gson gson = new Gson();
                     CustomBean customBean = gson.fromJson(str, type);
                     if (customBean.getData().equals("")) {

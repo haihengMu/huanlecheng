@@ -30,14 +30,14 @@
         <activity android:name=".Ti_money_activity" />
         <activity android:name=".MoreActivity" />
         <activity android:name=".BuyCar" />
-        <activity android:name=".MemberActivity" />
-        <activity android:name=".ActivityMap" />
-        <activity android:name=".ActivityZhuan" />
-        <activity android:name=".MemberBJactivity" />
-        <activity android:name=".MemberNowActivity" />
-        <activity android:name=".TuanduiMoneyActivity" />
-        <activity android:name=".KefuActivity" />
-        <activity android:name=".XiuGaiActivity" />
+        <activity android:name=".MemberActivity"/>
+        <activity android:name=".ActivityMap"/>
+        <activity android:name=".ActivityZhuan"/>
+        <activity android:name=".MemberBJactivity"/>
+        <activity android:name=".MemberNowActivity"/>
+        <activity android:name=".TuanduiMoneyActivity"/>
+        <activity android:name=".KefuActivity"/>
+        <activity android:name=".XiuGaiActivity"/>
         <activity
             android:name="MainActivity"
             android:launchMode="singleTask"
@@ -126,23 +126,6 @@
             android:name="BenefitDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".BankCZQrenAvtivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".BindingBankNameActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ProvinceActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".cityActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

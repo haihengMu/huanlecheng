@@ -94,28 +94,28 @@ public class XListView extends ListView implements OnScrollListener {
 	public void setCanLoadMore(boolean pCanLoadMore) {
 		mCanLoadMore = pCanLoadMore;
 		if (mCanLoadMore) {
-			 if (mFooterView != null
-			 && mFooterView.getVisibility() == VISIBLE) {
-
-			 }else {
-			 addFooterView(mFooterView);
-			 }
-			 mPullLoading = true;
+			// if (mFooterView != null
+			// && mFooterView.getVisibility() == VISIBLE) {
+			//
+			// }else {
+			// addFooterView(mFooterView);
+			// }
+			// mPullLoading = true;
 			mFooterView.show();
-			 mFooterView.setState(XListViewFooter.STATE_NORMAL);
+			// mFooterView.setState(XListViewFooter.STATE_NORMAL);
 		} else {
-			 if (!pCanLoadMore) {
-			 if (mFooterView != null
-			 && mFooterView.getVisibility() == VISIBLE) {
-			 // 突然关闭加载更多功能之后，我们要移除FootView。
-			 System.out
-			 .println("this.removeFooterView(endRootView);...");
-			 mFooterView.hide();
-			 // this.removeFooterView(mFooterView);
-			 }
-			 } else {
-			 mFooterView.hide();
-			 }
+			// if (!pCanLoadMore) {
+			// if (mFooterView != null
+			// && mFooterView.getVisibility() == VISIBLE) {
+			// // 突然关闭加载更多功能之后，我们要移除FootView。
+			// System.out
+			// .println("this.removeFooterView(endRootView);...");
+			// mFooterView.hide();
+			// // this.removeFooterView(mFooterView);
+			// }
+			// } else {
+			// mFooterView.hide();
+			// }
 			mFooterView.hide();
 		}
 	}
@@ -243,6 +243,7 @@ public class XListView extends ListView implements OnScrollListener {
 	public void stopRefresh() {
 		RUser.complete_time = 2;
 		new myThread().start();
+
 	}
 
 	public class myThread extends Thread {

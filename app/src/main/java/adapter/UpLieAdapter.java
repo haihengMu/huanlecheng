@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import activity.huanlecheng.R;
-import bean.CaipiaoTopBean;
+import bean.CaiPiaoNewTopBean;
 import util.CaipiaoDao;
 
 /**
@@ -21,11 +21,11 @@ import util.CaipiaoDao;
  */
 
 public class UpLieAdapter extends BaseAdapter {
-    private List<CaipiaoTopBean> liePlaynameList;
+    private List<CaiPiaoNewTopBean> liePlaynameList;
     private Context context;
     private LayoutInflater inflater;
 
-    public void setData(List<CaipiaoTopBean> data) {
+    public void setData(List<CaiPiaoNewTopBean> data) {
         this.liePlaynameList = data;
         notifyDataSetChanged();
     }
@@ -48,12 +48,12 @@ public class UpLieAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tv_name.setText(liePlaynameList.get(position).getG_P_Name());
+        viewHolder.tv_name.setText(liePlaynameList.get(position).getH_g_p_name());
         viewHolder.rl_tou.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CaipiaoDao caipiaoDao = new CaipiaoDao(context);
-                caipiaoDao.delByname(liePlaynameList.get(position).getG_P_Name());
+                caipiaoDao.deltopByname(liePlaynameList.get(position).getH_g_p_name());
                 liePlaynameList.remove(position);
                 Intent intent = new Intent();
                 intent.setAction("action.topviewdel");

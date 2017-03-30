@@ -64,7 +64,7 @@ public class AlterPassword extends BaseActivity
             public void onClick(View v) {
                 String U_PassWord = et_dqmm.getText().toString();
                 String U_PassWord2 = et_newmm.getText().toString();
-                if (et_dqmm.getText().toString().equals("")
+             if (et_dqmm.getText().toString().equals("")
                         || et_newmm.getText().toString().equals("")) {
                     Toast.makeText(AlterPassword.this, "请输入密码", Toast.LENGTH_SHORT).show();
                 } else {
@@ -80,11 +80,11 @@ public class AlterPassword extends BaseActivity
 
     public void Updatemm(String U_PassWord,
                          String U_PassWord2) {
-        AjaxParams params = new AjaxParams();
-        params.put("pass_old", U_PassWord);
-        params.put("pass_new", U_PassWord2);
+        AjaxParams params=new AjaxParams();
+        params.put("pass_old",U_PassWord);
+        params.put("pass_new",U_PassWord2);
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + Constants.newpass, params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl()+Constants.newpass,params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {// 开始http请求的时候回调
                 // TODO Auto-generated method stub
@@ -139,10 +139,9 @@ public class AlterPassword extends BaseActivity
                         java.lang.reflect.Type type = new TypeToken<GaiMiBean>() {
                         }.getType();
                         GaiMiBean loginBean = gson.fromJson(str, type);
-                        if (str.indexOf("修改成功") != -1) {
+                        if (str.indexOf("修改成功")!=-1) {
                             showToast(loginBean.getData());
-                            finish();
-                        } else {
+                        }else {
                             showToast(loginBean.getError());
                         }
                     } catch (JSONException e) {

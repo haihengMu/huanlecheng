@@ -11,7 +11,6 @@ import java.util.List;
 
 import activity.huanlecheng.R;
 import bean.MsgTuanBean;
-import bean.TuanduiBean;
 
 /**
  * Created by Administrator on 2016/12/14.
@@ -19,12 +18,12 @@ import bean.TuanduiBean;
 
 public class TuanduiAdapter extends BaseAdapter {
     private Context context;
-    private List<TuanduiBean.DataBean.ListBean> list;
+    private List<MsgTuanBean> list;
 
     public TuanduiAdapter(Context applicationContext) {
         this.context=applicationContext;
     }
-    public void setData(List<TuanduiBean.DataBean.ListBean> data) {
+    public void setData(List<MsgTuanBean> data) {
         this.list = data;
         notifyDataSetChanged();
     }
@@ -46,20 +45,20 @@ public class TuanduiAdapter extends BaseAdapter {
         }else {
             viewHolder= (ViewHolder) convertView.getTag();
         }
-        viewHolder.tv_ding_num.setText(list.get(position).getH_w_d_oid());
-        viewHolder.tv_user.setText(list.get(position).getH_w_d_uname());
-        viewHolder.tv_bank.setText(list.get(position).getH_w_d_bid());
-        viewHolder.tv_name.setText(list.get(position).getH_w_d_uname());
-        viewHolder.tv_qu_money.setText(list.get(position).getH_w_d_money()+"元");
-        viewHolder.tv_fuwu_money.setText(list.get(position).getH_w_d_service_fee());
-        if (list.get(position).getH_w_d_state().equals("1")){
+        viewHolder.tv_ding_num.setText(list.get(position).getT_L_OrderId());
+        viewHolder.tv_user.setText(list.get(position).getT_L_UserName());
+        viewHolder.tv_bank.setText(list.get(position).getT_L_Bank());
+        viewHolder.tv_name.setText(list.get(position).getT_L_AccountName());
+        viewHolder.tv_qu_money.setText(list.get(position).getT_L_Money()+"元");
+        viewHolder.tv_fuwu_money.setText(list.get(position).getT_L_Servicefee());
+        if (list.get(position).getT_L_State().equals("1")){
             viewHolder.tv_state.setText("已支付");
-        }else  if (list.get(position).getH_w_d_state().equals("2")){
+        }else  if (list.get(position).getT_L_State().equals("2")){
             viewHolder.tv_state.setText("处理中");
-        }else  if (list.get(position).getH_w_d_state().equals("3")){
+        }else  if (list.get(position).getT_L_State().equals("3")){
             viewHolder.tv_state.setText("已拒绝");
         }
-        viewHolder.tv_time.setText(list.get(position).getH_w_d_addtime());
+        viewHolder.tv_time.setText(list.get(position).getT_L_AddTime());
         return convertView;
     }
     @Override

@@ -10,6 +10,7 @@ import java.util.List;
 
 import bean.CaiPiaoNewTopBean;
 import bean.CaipiaoBean;
+import bean.CaipiaoTopBean;
 import bean.NameBean;
 
 /**
@@ -23,8 +24,9 @@ public class CaipiaoDao {
     private final CaipiaoDBHelper helper;
     private static final String TABLE_NAME = "Play_name";
     private static final String TABLENAME = "bigname";
-    private List<NameBean> data;
-    private static final String TABLE_TOP = "table_new_top";
+    private static final String TABLE_TOP = "table_top";
+    private static final String TABLE_NEW_TOP = "table_new_top";
+    private static final String ADDNUMBERNEW = "add_number";//游戏添加号码存的东西
     /**
      * 只有一个有参的构造,要求必须传入上下文
      *
@@ -80,7 +82,7 @@ public class CaipiaoDao {
      * @return
      */
     public void delByTime(String time) {
-        String sql = "delete from " + TABLE_NAME + " where time =?";
+        String sql = "delete from " + ADDNUMBERNEW + " where time =?";
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(sql, new String[]{time});
         db.close();
@@ -99,7 +101,7 @@ public class CaipiaoDao {
     }
 
     public void delByTitle(String name) {
-        String sql = "delete from " + TABLE_NAME + " where hx_name=?";
+        String sql = "delete from " + ADDNUMBERNEW + " where hx_name=?";
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(sql, new String[]{name});
         db.close();
@@ -171,7 +173,7 @@ public class CaipiaoDao {
     public List<CaipiaoBean> findName(String dname) {
         SQLiteDatabase db = helper.getReadableDatabase();
         List<CaipiaoBean> mlist = new ArrayList<>();
-        Cursor cursor = db.query(TABLE_NAME, new String[]{"nameId", "zero", "today_money", "hx_name", "name", "number", "code_text", "multiple", "mode",
+        Cursor cursor = db.query(ADDNUMBERNEW, new String[]{"nameId", "zero", "today_money", "hx_name", "name", "number", "code_text", "multiple", "mode",
                 "money", "tid", "mount", "tipId", "idea", "time"}, "hx_name=?", new String[]{dname}, null, null, null);
         while (cursor.moveToNext()) {
             String nameId = cursor.getString(0);
@@ -294,8 +296,7 @@ public class CaipiaoDao {
         db.close();
         return list;
     }
-/*
-    *//**
+    /**
      * 滑动栏的所有数据
      */
     public boolean addtop(String G_P_AddTime, String G_P_AmountStep, String G_P_Bonus, String G_P_Decimal, String G_P_Id, String G_P_MaxBetsMoney,
@@ -338,18 +339,159 @@ public class CaipiaoDao {
         }
     }
 
-/**
+    /**
+     * 查找所有的
+     *
+     * @return
+     */
+    public List<CaipiaoTopBean> findAllTop() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        List<CaipiaoTopBean> list = new ArrayList<>();
+        Cursor cursor = db.query(TABLE_TOP, new String[]{"G_P_AddTime", "G_P_AmountStep", "G_P_Bonus", "G_P_Decimal", "G_P_Id", "G_P_MaxBetsMoney",
+                "G_P_MaxBonus", "G_P_MaxBonusMode", "G_P_Maximum", "G_P_MaximumBonusRebate", "G_P_MinBetsMoney", "G_P_MinimumBonusRebate", "G_P_Name",
+                "G_P_NameId", "G_P_NumberName", "G_P_Off", "G_P_OneAmount", "G_P_RebateStep", "G_P_ReturnOff", "G_P_Rules", "G_P_Sort", "G_P_Text", "G_P_TypeId",
+                "G_P_WapOff", "title"}, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            String G_P_AddTime = cursor.getString(0);
+            String G_P_AmountStep = cursor.getString(1);
+            String G_P_Bonus = cursor.getString(2);
+            String G_P_Decimal = cursor.getString(3);
+            String G_P_Id = cursor.getString(4);
+            String G_P_MaxBetsMoney = cursor.getString(5);
+            String G_P_MaxBonus = cursor.getString(6);
+            String G_P_MaxBonusMode = cursor.getString(7);
+            String G_P_Maximum = cursor.getString(8);
+            String G_P_MaximumBonusRebate = cursor.getString(9);
+            String G_P_MinBetsMoney = cursor.getString(10);
+            String G_P_MinimumBonusRebate = cursor.getString(11);
+            String G_P_Name = cursor.getString(12);
+            String G_P_NameId = cursor.getString(13);
+            String G_P_NumberName = cursor.getString(14);
+            String G_P_Off = cursor.getString(15);
+            String G_P_OneAmount = cursor.getString(16);
+            String G_P_RebateStep = cursor.getString(17);
+            String G_P_ReturnOff = cursor.getString(18);
+            String G_P_Rules = cursor.getString(19);
+            String G_P_Sort = cursor.getString(20);
+            String G_P_Text = cursor.getString(21);
+            String G_P_TypeId = cursor.getString(22);
+            String G_P_WapOff = cursor.getString(23);
+            String title = cursor.getString(24);
+            CaipiaoTopBean hx_game_playResponseModel = new CaipiaoTopBean();
+            hx_game_playResponseModel.setG_P_AddTime(G_P_AddTime);
+            hx_game_playResponseModel.setG_P_AmountStep(G_P_AmountStep);
+            hx_game_playResponseModel.setG_P_Bonus(G_P_Bonus);
+            hx_game_playResponseModel.setG_P_Decimal(G_P_Decimal);
+            hx_game_playResponseModel.setG_P_Id(G_P_Id);
+            hx_game_playResponseModel.setG_P_MaxBetsMoney(G_P_MaxBetsMoney);
+            hx_game_playResponseModel.setG_P_MaxBonus(G_P_MaxBonus);
+            hx_game_playResponseModel.setG_P_MaxBonusMode(G_P_MaxBonusMode);
+            hx_game_playResponseModel.setG_P_Maximum(G_P_Maximum);
+            hx_game_playResponseModel.setG_P_MaximumBonusRebate(G_P_MaximumBonusRebate);
+            hx_game_playResponseModel.setG_P_MinBetsMoney(G_P_MinBetsMoney);
+            hx_game_playResponseModel.setG_P_MinimumBonusRebate(G_P_MinimumBonusRebate);
+            hx_game_playResponseModel.setG_P_Name(G_P_Name);
+            hx_game_playResponseModel.setG_P_NameId(G_P_NameId);
+            hx_game_playResponseModel.setG_P_NumberName(G_P_NumberName);
+            hx_game_playResponseModel.setG_P_Off(G_P_Off);
+            hx_game_playResponseModel.setG_P_OneAmount(G_P_OneAmount);
+            hx_game_playResponseModel.setG_P_RebateStep(G_P_RebateStep);
+            hx_game_playResponseModel.setG_P_ReturnOff(G_P_ReturnOff);
+            hx_game_playResponseModel.setG_P_Rules(G_P_Rules);
+            hx_game_playResponseModel.setG_P_Sort(G_P_Sort);
+            hx_game_playResponseModel.setG_P_Text(G_P_Text);
+            hx_game_playResponseModel.setG_P_TypeId(G_P_TypeId);
+            hx_game_playResponseModel.setG_P_WapOff(G_P_WapOff);
+            hx_game_playResponseModel.setTitle(title);
+            list.add(hx_game_playResponseModel);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    /**
+     * 根据名字修改倍数
+     */
+    public void updatebei(String multiple, String hx_name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("update " + ADDNUMBERNEW + " set multiple =? where hx_name=?", new Object[]{multiple, hx_name});
+        db.close();//释放资源
+    }
+
+    /**
+     * 根据名字修改模式
+     */
+    public void updateMode(String mode, String hx_name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("update " + ADDNUMBERNEW + " set mode =? where hx_name=?", new Object[]{mode, hx_name});
+        db.close();//释放资源
+    }
+
+    /**
+     * 根据名字修改钱数
+     */
+    public void updateMoney(String money, String hx_name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("update " + TABLE_NAME + " set money =? where hx_name=?", new Object[]{money, hx_name});
+        db.close();//释放资源
+    }
+    /**
+     * 滑动栏的所有数据
+     */
+    public boolean addnewtop(String h_g_p_name, String h_g_p_id, String h_g_p_cid, String h_g_p_nid, String h_g_p_tid, String h_g_p_gid,
+                          String h_g_p_rid, String h_g_p_one_amount, String h_g_p_max_bet_mum, String h_g_p_bonus, String h_g_p_amount_step, String h_g_p_rebate_step,
+                          String h_g_p_decimal, String h_g_p_return_off, String h_g_p_introduction, String h_g_p_example, String h_g_p_max_imumbonus_rebate, String h_g_p_mini_mumbonus_rebate,
+                             String h_g_p_mini_bet_money, String h_g_p_max_bet_money, String h_g_p_max_bonus
+            , String h_g_p_max_bonus_mode, String h_g_p_not_bet_code, String h_g_p_singled_num,String h_g_p_singled_max_bonus, String title) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("h_g_p_name", h_g_p_name);
+        values.put("h_g_p_id", h_g_p_id);
+        values.put("h_g_p_cid", h_g_p_cid);
+        values.put("h_g_p_nid", h_g_p_nid);
+        values.put("h_g_p_tid", h_g_p_tid);
+        values.put("h_g_p_gid", h_g_p_gid);
+        values.put("h_g_p_rid", h_g_p_rid);
+        values.put("h_g_p_one_amount", h_g_p_one_amount);
+        values.put("h_g_p_max_bet_mum", h_g_p_max_bet_mum);
+        values.put("h_g_p_bonus", h_g_p_bonus);
+        values.put("h_g_p_amount_step", h_g_p_amount_step);
+        values.put("h_g_p_rebate_step", h_g_p_rebate_step);
+        values.put("h_g_p_decimal", h_g_p_decimal);
+        values.put("h_g_p_return_off", h_g_p_return_off);
+        values.put("h_g_p_introduction", h_g_p_introduction);
+        values.put("h_g_p_example", h_g_p_example);
+        values.put("h_g_p_max_imumbonus_rebate", h_g_p_max_imumbonus_rebate);
+        values.put("h_g_p_mini_mumbonus_rebate", h_g_p_mini_mumbonus_rebate);
+        values.put("h_g_p_mini_bet_money", h_g_p_mini_bet_money);
+        values.put("h_g_p_max_bet_money", h_g_p_max_bet_money);
+        values.put("h_g_p_max_bonus", h_g_p_max_bonus);
+        values.put("h_g_p_max_bonus_mode", h_g_p_max_bonus_mode);
+        values.put("h_g_p_not_bet_code", h_g_p_not_bet_code);
+        values.put("h_g_p_singled_num", h_g_p_singled_num);
+        values.put("h_g_p_singled_max_bonus", h_g_p_singled_max_bonus);
+        values.put("title", title);
+        long result = db.insert(TABLE_NEW_TOP, null, values);
+        db.close();//关闭数据库释放资源
+        if (result != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
      * 查找所有的
      * @return
      */
-    public List<CaiPiaoNewTopBean> findAllTop() {
+    public List<CaiPiaoNewTopBean> findAllnewTop() {
         SQLiteDatabase db = helper.getWritableDatabase();
         List<CaiPiaoNewTopBean> list = new ArrayList<>();
-        Cursor cursor = db.query(TABLE_TOP, new String[]{"h_g_p_name", "h_g_p_id", "h_g_p_cid", "h_g_p_nid", "h_g_p_tid", "h_g_p_gid",
+        Cursor cursor = db.query(TABLE_NEW_TOP, new String[]{"h_g_p_name", "h_g_p_id", "h_g_p_cid", "h_g_p_nid", "h_g_p_tid", "h_g_p_gid",
                 "h_g_p_rid", "h_g_p_one_amount", "h_g_p_max_bet_mum", "h_g_p_bonus", "h_g_p_amount_step", "h_g_p_rebate_step", "h_g_p_decimal",
                 "h_g_p_return_off", "h_g_p_introduction", "h_g_p_example", "h_g_p_max_imumbonus_rebate", "h_g_p_mini_mumbonus_rebate", "h_g_p_mini_bet_money",
                 "h_g_p_max_bet_money", "h_g_p_max_bonus", "h_g_p_max_bonus_mode", "h_g_p_not_bet_code",
-                "h_g_p_singled_num", "h_g_p_singled_max_bonus"}, null, null, null, null, null);
+                "h_g_p_singled_num", "h_g_p_singled_max_bonus","title"}, null, null, null, null, null);
         while (cursor.moveToNext()) {
             String h_g_p_name = cursor.getString(0);
             String h_g_p_id = cursor.getString(1);
@@ -375,7 +517,9 @@ public class CaipiaoDao {
             String h_g_p_max_bonus_mode = cursor.getString(21);
             String h_g_p_not_bet_code = cursor.getString(22);
             String h_g_p_singled_num = cursor.getString(23);
-            String h_g_p_singled_max_bonus = cursor.getString(23);
+            String h_g_p_singled_max_bonus = cursor.getString(24);
+            String title=cursor.getString(25);
+
             CaiPiaoNewTopBean caiPiaoNewTopBean = new CaiPiaoNewTopBean();
             caiPiaoNewTopBean.setH_g_p_name(h_g_p_name);
             caiPiaoNewTopBean.setH_g_p_id(h_g_p_id);
@@ -402,6 +546,7 @@ public class CaipiaoDao {
             caiPiaoNewTopBean.setH_g_p_not_bet_code(h_g_p_not_bet_code);
             caiPiaoNewTopBean.setH_g_p_singled_num(h_g_p_singled_num);
             caiPiaoNewTopBean.setH_g_p_singled_max_bonus(h_g_p_singled_max_bonus);
+            caiPiaoNewTopBean.setTitle(title);
             list.add(caiPiaoNewTopBean);
         }
         cursor.close();
@@ -410,30 +555,119 @@ public class CaipiaoDao {
     }
 
     /**
-     * 根据名字修改倍数
+     * 删除滑动栏全部
      */
-    public void updatebei(String multiple, String hx_name) {
+    public void deleteAllTopName() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("update " + TABLE_NAME + " set multiple =? where hx_name=?", new Object[]{multiple, hx_name});
-        db.close();//释放资源
+        db.execSQL("delete from " + TABLE_NEW_TOP);
+        db.close();
     }
 
     /**
-     * 根据名字修改模式
+     * top
+     *根据名删除添加的游戏玩法
+     * @param name
      */
-    public void updateMode(String mode, String hx_name) {
+    public void deltopByname(String name) {
+        String sql = "delete from " + TABLE_NEW_TOP + " where h_g_p_name =?";
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("update " + TABLE_NAME + " set mode =? where hx_name=?", new Object[]{mode, hx_name});
-        db.close();//释放资源
+        db.execSQL(sql, new String[]{name});
+        db.close();
     }
-
     /**
-     * 根据名字修改钱数
+     * 增加一个游戏的新追号单
+     * hx_name 大游戏名
+     * NAME 游戏名
+     * Number 投注号码
+     * Code_Text 注数
+     * Multiple倍数
+     * Mode 投注模式
+     * money投注钱数
+     * tid投注的游戏的id
      */
-    public void updateMoney(String money, String hx_name) {
+    public boolean addnewnumber(String nameId, String zero, String today_money, String hx_name, String name, String number,
+                                String code_text, String multiple, String mode, String money, String tid, String mount,
+                                String tipId, String idea, String time) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("update " + TABLE_NAME + " set money =? where hx_name=?", new Object[]{money, hx_name});
-        db.close();//释放资源
+        ContentValues values = new ContentValues();
+        values.put("nameId", nameId);
+        values.put("zero", zero);
+        values.put("today_money", today_money);
+        values.put("hx_name", hx_name);
+        values.put("name", name);
+        values.put("number", number);
+        values.put("code_text", code_text);
+        values.put("multiple", multiple);
+        values.put("mode", mode);
+        values.put("money", money);
+        values.put("tid", tid);
+        values.put("mount", mount);
+        values.put("tipId", tipId);
+        values.put("idea", idea);
+        values.put("time", time);
+        long result = db.insert(ADDNUMBERNEW, null, values);
+        db.close();//关闭数据库释放资源
+        if (result != -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
+    /**
+     * 根据时间删除添加的号码
+     *
+     * @return
+     */
+    public void delByTimenumber(String time) {
+        String sql = "delete from " + ADDNUMBERNEW + " where time =?";
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(sql, new String[]{time});
+        db.close();
+    }
+    /**
+     * 查找表中所有字段的id
+     */
+    public List<CaipiaoBean> findgamenewAll() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        List<CaipiaoBean> list = new ArrayList<>();
+        Cursor cursor = db.query(ADDNUMBERNEW, new String[]{"nameId", "zero", "today_money", "hx_name", "name", "number",
+                "code_text", "multiple", "mode", "money", "tid", "mount", "tipId", "idea", "time"}, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            String nameId = cursor.getString(0);
+            String zero = cursor.getString(1);
+            String today_money = cursor.getString(2);
+            String hx_name = cursor.getString(3);
+            String name = cursor.getString(4);
+            String number = cursor.getString(5);
+            String code_text = cursor.getString(6);
+            String multiple = cursor.getString(7);
+            String mode = cursor.getString(8);
+            String money = cursor.getString(9);
+            String tid = cursor.getString(10);
+            String mount = cursor.getString(11);
+            String tipId = cursor.getString(12);
+            String idea = cursor.getString(13);
+            String time = cursor.getString(14);
+            CaipiaoBean caipiaoBean = new CaipiaoBean();
+            caipiaoBean.setMount(mount);
+            caipiaoBean.setNameId(nameId);
+            caipiaoBean.setZero(zero);
+            caipiaoBean.setToday_money(today_money);
+            caipiaoBean.setHx_name(hx_name);
+            caipiaoBean.setName(name);
+            caipiaoBean.setNumber(number);
+            caipiaoBean.setCode_text(code_text);
+            caipiaoBean.setMultiple(multiple);
+            caipiaoBean.setMode(mode);
+            caipiaoBean.setMoney(money);
+            caipiaoBean.setTid(tid);
+            caipiaoBean.setTipId(tipId);
+            caipiaoBean.setIdea(idea);
+            caipiaoBean.setTime(time);
+            list.add(caipiaoBean);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
 }

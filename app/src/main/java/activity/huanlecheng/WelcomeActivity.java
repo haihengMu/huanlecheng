@@ -107,7 +107,7 @@ public class WelcomeActivity extends BaseActivity {
         params.put("Model", "Mobile");
         params.put("Action", "get_mobile_version");*/
         wh.configCookieStore(RUser.cookieStore);
-        wh.post("https://appdownload.public.ms/hlc/version", new AjaxCallBack<String>() {
+        wh.post("https://appdownload.public.ms/wjsj/version/", new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();

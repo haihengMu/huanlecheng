@@ -13,21 +13,20 @@ import java.util.List;
 
 import activity.huanlecheng.R;
 import bean.BankCZBean;
-import bean.GetPayListBean;
 
 /**
  * Created by Administrator on 2016/12/7.
  */
 
 public class BankCZAdapter extends BaseAdapter {
-    private List<GetPayListBean.DataBean> data;
+    private List<BankCZBean> data;
     private Context context;
 
     public BankCZAdapter(Context applicationContext) {
         this.context = applicationContext;
     }
 
-    public void setData(List<GetPayListBean.DataBean> data) {
+    public void setData(List<BankCZBean> data) {
         this.data = data;
     }
 
@@ -43,8 +42,8 @@ public class BankCZAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.bankname.setText(data.get(position).get_$1().getList().get(0).getCode());
-        viewHolder.ll_layot.setBackgroundColor(Color.rgb(63, 65, 78));
+        viewHolder.bankname.setText(data.get(position).getH_T_P_T_Nickname());
+        viewHolder.ll_layot.setBackgroundColor(Color.rgb(63,65,78));
         return convertView;
     }
 

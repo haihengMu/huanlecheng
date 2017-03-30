@@ -23,7 +23,7 @@ public class BankLieAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater mInflater;
-    private List<BankLieBean.DataBean> mlist;
+    private List<BankLieBean> mlist;
 
 
     public BankLieAdapter(Application application) {
@@ -31,7 +31,7 @@ public class BankLieAdapter extends BaseAdapter {
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<BankLieBean.DataBean> mlist) {
+    public void setData(List<BankLieBean> mlist) {
         this.mlist = mlist;
     }
 
@@ -47,7 +47,7 @@ public class BankLieAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.ll_layot.setBackgroundColor(Color.rgb(63, 65, 78));
-        viewHolder.bankname.setText(mlist.get(position).getCard());
+        viewHolder.bankname.setText(mlist.get(position).getH_U_B_L_Bank_Account());
 
         return convertView;
     }

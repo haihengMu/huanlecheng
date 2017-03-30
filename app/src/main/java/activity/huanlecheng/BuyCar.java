@@ -22,12 +22,13 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import adapter.BuyCarAdapter;
 import bean.AddBuyResponse;
 import bean.CaipiaoBean;
-import bean.GetTheIssueAndTimeBean;
 import constants.Constants;
 import constants.RUser;
 import http.AjaxCallBack;
@@ -56,7 +57,6 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
     private ImageView y_touzhu;
     private String ds_titile;
     private List<CaipiaoBean> dTitleList;
-    private GetTheIssueAndTimeBean gt;
     private List<CaipiaoBean> mlist;
     private TextView tv_money;
     private String model;
@@ -67,6 +67,9 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
     private LinearLayout view_loading;
     private LinearLayout view_load_fail;
     private TextView txt_neterr;
+    private List<CaipiaoBean> newlist;
+    private String gameId;
+    private String gt;
 
 
     @Override
@@ -96,13 +99,18 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
 
     private void initView() {
         ds_titile = getIntent().getStringExtra("dtitle");
-        // gameId = getIntent().getStringExtra("gameId");
-        gt = (GetTheIssueAndTimeBean) getIntent().getExtras().getSerializable(
+        gameId = getIntent().getStringExtra("gameId");
+        gt = getIntent().getStringExtra(
                 "model");
         xlistview = (XListView) findViewById(R.id.xlistview);
         iv_zhuihao = (ImageView) findViewById(R.id.iv_zhuihao);
         y_touzhu = (ImageView) findViewById(R.id.y_touzhu);
-        y_touzhu.setOnClickListener(this);
+        y_touzhu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Touzhu(gameId, gt);
+            }
+        });
         iv_zhuihao.setOnClickListener(this);
         iv_del = (ImageView) findViewById(R.id.iv_del);
         iv_del.setOnClickListener(this);
@@ -121,6 +129,7 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
         registerReceiver(bdr, intentFilter);
 
     }
+
     /**
      * 将集合中的数据全部修改存到数据库
      */
@@ -136,7 +145,7 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
         }
         caipiaoDao.updateMode(model, ds_titile);
         caipiaoDao.updatebei(beishu, ds_titile);
-        List<CaipiaoBean> newlist = caipiaoDao.findName(ds_titile);
+        newlist = caipiaoDao.findName(ds_titile);
         moneylist = new ArrayList<>();
         DecimalFormat df = new DecimalFormat("0.0000");
         for (int j = 0; j < newlist.size(); j++) {
@@ -164,30 +173,82 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
         }
     };
 
+    public void Touzhu(String gameId, String gt) {
+       Map<String,String> mmap;
+        AjaxParams params = new AjaxParams();
+        params.put("gid", gameId);
+        params.put("issue", gt);
+        params.put("rebate", "12.60");
+        for (int i = 0; i < newlist.size(); i++) {
+            mmap=new HashMap<>();
+            mmap.put("pid",newlist.get(i).getTipId());
+            mmap.put("code",newlist.get(i).getNumber());
+            mmap.put("multiple",newlist.get(i).getMultiple());
+            mmap.put("bet_num",newlist.get(i).getCode_text());
+            if (newlist.get(i).getMode().equals("元")) {
+                mmap.put("amount_mode",newlist.get(i).getTipId());
+            } else if (newlist.get(i).getMode().equals("角")) {
+                mmap.put("amount_mode",newlist.get(i).getTipId());
+            } else if (newlist.get(i).getMode().equals("分")) {
+                mmap.put("amount_mode",newlist.get(i).getTipId());
+            } else {
+                mmap.put("amount_mode",newlist.get(i).getTipId());
+            }
+        }
+      //  params.put("codes", mmap);
+        wh.configCookieStore(RUser.cookieStore);
+        wh.post(Constants.getUrl() + Constants.touzhu, params, new AjaxCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+                Message msg = new Message();
+                msg.what = 1;
+                msg.obj = s;
+                handle.sendMessage(msg);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+            }
+        });
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_del:
-                List<CaipiaoBean> mlist2=caipiaoDao.findAll();
-                for (int i=0;i<mlist2.size();i++){
-                    if (mlist2.get(i).getHx_name().equals(ds_titile)){
+                List<CaipiaoBean> mlist2 = caipiaoDao.findgamenewAll();
+                for (int i = 0; i < mlist2.size(); i++) {
+                    if (mlist2.get(i).getHx_name().equals(ds_titile)) {
                         caipiaoDao.delByTitle(mlist2.get(i).getHx_name());
                     }
                 }
                 xlistview.setAdapter(null);
                 Toast.makeText(getApplicationContext(), "清除成功", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.iv_zhuihao:
-                /**4
-                 * 需要在数据库中存nameid
-                 *id+投注号+注数
-                 * 百分数
-                 * 钱数
-                 * 当前总奖金
-                 * 倍数
-                 * 总注数
-                 * 0单式1复试
-                 */
+       /*     case R.id.iv_zhuihao:
+                *//**4
+             * 需要在数据库中存nameid
+             *id+投注号+注数
+             * 百分数
+             * 钱数
+             * 当前总奖金
+             * 倍数
+             * 总注数
+             * 0单式1复试
+             *//*
 
                 String url = "";
                 String dnumber = "";
@@ -291,9 +352,9 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
                     startActivity(intent);
                     userInfo.setCorner(model);
                     finish();
-                }
-                break;
-            case R.id.y_touzhu:
+                }*/
+            //break;
+          /*  case R.id.y_touzhu:
                 url = "";
                 dnum = 0;
                 z_money = 0;
@@ -309,10 +370,8 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
                 }
                 DecimalFormat df = new DecimalFormat("0.0000");
                 if (mlist.size() == 0) {
-                    //   Toast.makeText(getApplicationContext(), "0++", Toast.LENGTH_SHORT).show();
                 } else {
                     for (int i = 0; i < mlist.size(); i++) {
-                        //   z_money = Double.parseDouble(moneystring.get(i));
                         if (model.equals("元")) {
                             z_money = Double.parseDouble(mlist.get(i).getCode_text()) * Double.parseDouble(mlist.get(i).getMultiple());
                         } else if (model.equals("角")) {
@@ -371,9 +430,9 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
                     if (gt.getThen_Issue() == null) {
                         Toast.makeText(getApplicationContext(), "以过期", Toast.LENGTH_SHORT).show();
                     } else {
-                      /*  if ((float) Double.parseDouble(userInfo.getU_Money()) < (float) Double.parseDouble(dnum + "")) {
+                        if ((float) Double.parseDouble(userInfo.getU_Money()) < (float) Double.parseDouble(dnum + "")) {
                             showToast("金额不足，请充值");
-                        } else {*/
+                        } else {
                         String bsString = beishu;
                         DecimalFormat dd = new DecimalFormat("0.00000000");// 格式化小数
                         if (model.equals("元")) {
@@ -391,9 +450,9 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
                         tv_money.setText(dnum + "");
                         requestUserinfo(dnameID, gt.getThen_Issue(), url, bsString, dzero, dnum + "");
                         userInfo.setCorner(model);
-                        //   }
+                           }
                     }
-                }
+                }*/
         }
     }
 
@@ -419,13 +478,13 @@ public class BuyCar extends BaseActivity implements XListView.IXListViewListener
                                 SuccessActivity.class);
                         intent.putExtra("money", tv_money.getText().toString());
                         intent.putExtra("id", "0");// 0投注1是追号记录
-                        intent.putExtra("title",ds_titile);
+                        intent.putExtra("title", ds_titile);
                         startActivity(intent);
                         finish();
                     }
                     break;
                 case 1:
-
+                    String str1 = (String) msg.obj;
                     break;
 
                 default:

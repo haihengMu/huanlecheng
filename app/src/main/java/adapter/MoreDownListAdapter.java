@@ -13,7 +13,6 @@ import java.util.List;
 
 import activity.huanlecheng.MoreActivity;
 import activity.huanlecheng.R;
-import bean.HxNewChildPlay;
 import bean.NewPlayGameNameChild;
 import bean.PlayGameNewChildBean;
 
@@ -65,7 +64,6 @@ public class MoreDownListAdapter extends BaseAdapter {
                    }
                }
                BuyChildAdapter buyChildAdapter=new BuyChildAdapter(context,list,title,viewHolder.textView.getText().toString());
-             //  BuyMoreListviewGridAdapter buyMoreListviewGridAdapter=new BuyMoreListviewGridAdapter(context,date.get(position),list);
                viewHolder.gridView.setAdapter(buyChildAdapter);
 
            }

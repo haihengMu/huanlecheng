@@ -32,6 +32,17 @@ public class CaiPiaoNewTopBean implements Serializable {
     private String h_g_p_not_bet_code;
     private String h_g_p_singled_num;
     private String h_g_p_singled_max_bonus;
+    private String title;
+
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getH_g_p_id() {
         return h_g_p_id;

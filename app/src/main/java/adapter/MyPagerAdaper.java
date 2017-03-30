@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-import bean.CaipiaoTopBean;
+import bean.CaiPiaoNewTopBean;
 
 /**
  * Created by Administrator on 2016/10/31.
@@ -15,13 +15,14 @@ import bean.CaipiaoTopBean;
 
 public class MyPagerAdaper extends FragmentPagerAdapter {
     private List<Fragment> fragmentList;
-    private List<CaipiaoTopBean> mList;
+    private List<CaiPiaoNewTopBean> mList;
     private Application application;
-    public MyPagerAdaper(FragmentManager fm, List<Fragment> fragmentlist, List<CaipiaoTopBean> mList, Application application) {
+
+    public MyPagerAdaper(FragmentManager fm, List<Fragment> fragmentlist, List<CaiPiaoNewTopBean> mList, Application application) {
         super(fm);
-        this.fragmentList=fragmentlist;
-       this.mList=mList;
-        this.application=application;
+        this.fragmentList = fragmentlist;
+        this.mList = mList;
+        this.application = application;
         notifyDataSetChanged();
     }
 

@@ -3,12 +3,13 @@ package activity.huanlecheng;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,6 @@ import constants.Constants;
 import constants.RUser;
 import http.AjaxCallBack;
 import http.AjaxParams;
-import util.JsonUtil;
-
-import static android.R.attr.type;
 
 /**
  * Created by Administrator on 2016/12/13.
@@ -30,12 +28,11 @@ import static android.R.attr.type;
 
 public class MemberNowActivity extends BaseActivity {
 
-    private static final String TAG = "MemberNowActivity";
     private Button title_left_btn;
     private TextView title_textview;
     private ListView mlistview;
     private MemberNowAdapter memberNowAdapter;
-    private List<MemberNowBean.DataBean.ListBean> mylist;
+    private List<MsgNowBean> mylist;
     private LinearLayout view_loading;
     private LinearLayout view_load_fail;
     private TextView txt_neterr;
@@ -75,9 +72,14 @@ public class MemberNowActivity extends BaseActivity {
     }
 
     public void getUrl() {
+        //http://lf.client.cool/?Model=User&Action=OnlineUser_List&pagenum=100&showpagenum=1
         AjaxParams params = new AjaxParams();
+        params.put("Model", "User");
+        params.put("Action", "OnlineUser_List");
+        params.put("pagenum", "100");
+        params.put("showpagenum", "1");
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + Constants.teamOnlineUsers, params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -105,7 +107,7 @@ public class MemberNowActivity extends BaseActivity {
                 txt_neterr = (TextView) findViewById(R.id.txt_neterr);*/
                 view_load_fail.setVisibility(View.VISIBLE);
                 view_loading.setVisibility(View.GONE);
-                txt_neterr.setText(Constants.NETERROR + "点击屏幕加载重试");
+                txt_neterr.setText(Constants.NETERROR+"点击屏幕加载重试");
                 txt_neterr.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -122,30 +124,30 @@ public class MemberNowActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            //{"data":{"total_pages":0,"current_page":0,"count":"0","list":[]}}
             switch (msg.what) {
                 case 0:
                     loadingWindow.cancel();
                     String string = (String) msg.obj;
-                    Log.i(TAG, string);
-                    MemberNowBean memberNowBean = JsonUtil.parseJsonToBean(string, MemberNowBean.class);
-
-                    if (!"0".equals(memberNowBean.getData().getCount())) {
-//                        for (int i = 0; i < memberNowBean.getMsg().size(); i++) {
-//                            MsgNowBean msgNowBean = new MsgNowBean();
-//                            msgNowBean.setU_Money(memberNowBean.getMsg().get(i).getU_Money());
-//                            msgNowBean.setU_TheLoginTime(memberNowBean.getMsg().get(i).getU_TheLoginTime());
-//                            msgNowBean.setU_UpAgent(memberNowBean.getMsg().get(i).getU_UpAgent());
-//                            msgNowBean.setU_UserName(memberNowBean.getMsg().get(i).getU_UserName());
-//                            mylist.add(msgNowBean);
-//                        }
-                        mylist.addAll(memberNowBean.getData().getList());
+                    java.lang.reflect.Type type = new TypeToken<MemberNowBean>() {
+                    }.getType();
+                    MemberNowBean memberNowBean = gson.fromJson(string, type);
+                    if (!memberNowBean.getMsg().equals("[]")) {
+                        for (int i = 0; i < memberNowBean.getMsg().size(); i++) {
+                            MsgNowBean msgNowBean = new MsgNowBean();
+                            msgNowBean.setU_Money(memberNowBean.getMsg().get(i).getU_Money());
+                            msgNowBean.setU_TheLoginTime(memberNowBean.getMsg().get(i).getU_TheLoginTime());
+                            msgNowBean.setU_UpAgent(memberNowBean.getMsg().get(i).getU_UpAgent());
+                            msgNowBean.setU_UserName(memberNowBean.getMsg().get(i).getU_UserName());
+                            mylist.add(msgNowBean);
+                        }
                         memberNowAdapter.setData(mylist);
+
                     } else {
                         showToast("暂无会员");
                     }
                     view_loading.setVisibility(View.GONE);
                     view_load_fail.setVisibility(View.GONE);
+
                     break;
                 default:
             }

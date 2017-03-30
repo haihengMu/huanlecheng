@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import bean.CaiPiaoNewTopBean;
 import constants.UserInfo;
 import http.WiseHttp;
 import view.AlertWindow;
@@ -72,4 +73,6 @@ public abstract class BaseFragment extends Fragment {
 	public void showToast(int strId) {
 		showToast(getString(strId));
 	}
+
+
 }

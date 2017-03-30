@@ -15,6 +15,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:id="@+id/tv_banke_name"
+            android:text="haha"
             android:layout_height="wrap_content" />
     </LinearLayout>
 

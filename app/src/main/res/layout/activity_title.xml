@@ -2,17 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/test"
     android:layout_width="fill_parent"
-    android:layout_height="40dp">
+    android:layout_height="40dp"
+     >
 
     <RelativeLayout
+        android:layout_marginTop="5dp"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="5dp">
+        android:layout_height="fill_parent" >
 
         <RelativeLayout
             android:id="@+id/title_left_r"
             android:layout_width="50dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent" >
 
             <Button
                 android:id="@+id/title_left_btn"
@@ -23,11 +24,11 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_marginTop="5dp"
             android:id="@+id/title_relavite"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="5dp">
+            android:layout_centerInParent="true" >
 
             <TextView
                 android:id="@+id/title_textview"
@@ -47,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="14dp">
+            android:layout_marginRight="14dp" >
 
             <TextView
                 android:id="@+id/title_right_txt"
@@ -73,10 +74,10 @@
     </RelativeLayout>
 
     <View
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/activity_line"
-        android:visibility="gone" />
+        android:background="@color/activity_line" />
 
 </RelativeLayout>

@@ -2,20 +2,15 @@ package adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import activity.huanlecheng.R;
-import bean.FirstEvent;
 import view.ViewHolder;
 
 /**
@@ -26,20 +21,14 @@ public class NewPlayChildAdapter extends BaseAdapter {
     private Context context;
     private List<String> data;
     private String d;
-    private int mlistViewPosition;
-    private String mPid;
-    private final EventBus aDefault;
 
-    public NewPlayChildAdapter(Context context,int listViewPosition) {
+    public NewPlayChildAdapter(Context context) {
         this.context = context;
-        mlistViewPosition = listViewPosition;
-        aDefault = EventBus.getDefault();
     }
 
-    public void setData(List<String> data, String d, String pid) {
+    public void setData(List<String> data, String d) {
         this.data = data;
         this.d = d;
-        mPid = pid;
         notifyDataSetChanged();
     }
 
@@ -64,52 +53,48 @@ public class NewPlayChildAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(
                     R.layout.th_child_item, null);
         }
-        final CheckBox bottom_tt = ViewHolder.get(convertView, R.id.th_text);
+        final Button bottom_tt = ViewHolder.get(convertView, R.id.th_text);
         bottom_tt.setText(data.get(position));
         bottom_tt.setTextColor(Color.parseColor("#ffffff"));
+        bottom_tt.setBackgroundResource(R.drawable.changfangs);
         bottom_tt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("checked = ", bottom_tt.isChecked() + "");
-                FirstEvent firstEvent = new FirstEvent();
-                firstEvent.setGameId(mPid);
-                firstEvent.setMlistViewPosition(mlistViewPosition);
-                firstEvent.setChecked(bottom_tt.isChecked());
-                firstEvent.setmMsg(bottom_tt.getText().toString());
-                aDefault.post(firstEvent);
+                bottom_tt.setBackgroundResource(R.drawable.zhongback);
+                notifyDataSetChanged();
             }
         });
-        if (d.equals("da")) {
-            int a = data.size() / 2;
-            if (position >= a) {
-                bottom_tt.setChecked(true);
-            } else {
-                bottom_tt.setChecked(false);
+        if (d.equals("da")){
+            int a=data.size()/2;
+            if (position>=a){
+                bottom_tt.setBackgroundResource(R.drawable.zhongback);
+            }else {
+                bottom_tt.setBackgroundResource(R.drawable.changfangs);
             }
         }
-        if (d.equals("xiao")) {
-            int a = data.size() / 2;
-            if (position < a) {
-                bottom_tt.setChecked(true);
-            } else {
-                bottom_tt.setChecked(false);
+        if (d.equals("xiao")){
+            int a=data.size()/2;
+            if (position<a){
+                bottom_tt.setBackgroundResource(R.drawable.zhongback);
+            }else {
+                bottom_tt.setBackgroundResource(R.drawable.changfangs);
             }
         }
-        if (d.equals("quan")) {
-            bottom_tt.setChecked(true);
+        if (d.equals("quan")){
+            bottom_tt.setBackgroundResource(R.drawable.zhongback);
         }
-        if (d.equals("ji")) {
-            if (Integer.parseInt(data.get(position)) % 2 == 0) {
-                bottom_tt.setChecked(false);
-            } else {
-                bottom_tt.setChecked(true);
-            }
+        if (d.equals("ji")){
+              if (Integer.parseInt(data.get(position))%2==0){
+                  bottom_tt.setBackgroundResource(R.drawable.changfangs);
+              }else {
+                  bottom_tt.setBackgroundResource(R.drawable.zhongback);
+          }
         }
-        if (d.equals("ou")) {
-            if (Integer.parseInt(data.get(position)) % 2 == 0) {
-                bottom_tt.setChecked(true);
-            } else {
-                bottom_tt.setChecked(false);
+        if (d.equals("ou")){
+                if (Integer.parseInt(data.get(position))%2==0){
+                    bottom_tt.setBackgroundResource(R.drawable.zhongback);
+                }else {
+                    bottom_tt.setBackgroundResource(R.drawable.changfangs);
             }
         }
     /*    bottom_tt.setOnClickListener(new View.OnClickListener() {

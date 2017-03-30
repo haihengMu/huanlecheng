@@ -19,7 +19,6 @@ import activity.huanlecheng.ActivityZhuan;
 import activity.huanlecheng.MemberActivity;
 import activity.huanlecheng.MemberBJactivity;
 import activity.huanlecheng.R;
-import bean.MemberGuanliBean;
 import bean.MsgBean;
 
 /**
@@ -27,7 +26,7 @@ import bean.MsgBean;
  */
 
 public class MemberAdapter extends BaseAdapter {
-    private List<MemberGuanliBean.DataBean.ListBean> list;
+    private List<MsgBean> list;
     private Context context;
     private String nowtime;//系统时间
     private FrameLayout fl_xiaxian;
@@ -36,7 +35,7 @@ public class MemberAdapter extends BaseAdapter {
         this.context = applicationContext;
     }
 
-    public void setData(List<MemberGuanliBean.DataBean.ListBean> data, String time) {
+    public void setData(List<MsgBean> data, String time) {
         this.list = data;
         this.nowtime = time;
         notifyDataSetChanged();
@@ -62,12 +61,12 @@ public class MemberAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.member_money.setText(list.get(position).getH_u_balance());
-        viewHolder.tv_time.setText(list.get(position).getH_u_last_login_time());
-        viewHolder.menber_num.setText(list.get(position).getH_u_name());
-        viewHolder.tv_fandian.setText(list.get(position).getH_u_max_rebate());
-        viewHolder.member_number.setText(list.get(position).getH_u_id());
-        String time = list.get(position).getH_u_regtime();
+        viewHolder.member_money.setText(list.get(position).getU_Money());
+        viewHolder.tv_time.setText(list.get(position).getU_LastLoginTime());
+        viewHolder.menber_num.setText(list.get(position).getU_UserName());
+        viewHolder.tv_fandian.setText(list.get(position).getU_RebateA());
+        viewHolder.member_number.setText(list.get(position).getU_Id());
+        String time = list.get(position).getU_OnlineTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 此处会抛异常
         Date date = null;
@@ -95,7 +94,7 @@ public class MemberAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent=new Intent(context, ActivityZhuan.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("name",list.get(position).getH_u_name());
+                intent.putExtra("name",list.get(position).getU_UserName());
                 context.startActivity(intent);
 
             }
@@ -105,16 +104,16 @@ public class MemberAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent=new Intent(context, MemberBJactivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("u_name",list.get(position).getH_u_nickname());//用户昵称
-                intent.putExtra("u_username",list.get(position).getH_u_name());//帐号名
-                intent.putExtra("u_regtime",list.get(position).getH_u_regtime());//注册时间
-                intent.putExtra("u_lasttime",list.get(position).getH_u_last_login_time());//上次登录的时间
-                intent.putExtra("u_id",list.get(position).getH_u_id());//id
+                intent.putExtra("u_name",list.get(position).getU_Nickname());//用户昵称
+                intent.putExtra("u_username",list.get(position).getU_UserName());//帐号名
+                intent.putExtra("u_regtime",list.get(position).getU_RegTime());//注册时间
+                intent.putExtra("u_lasttime",list.get(position).getU_LastLoginTime());//上次登录的时间
+                intent.putExtra("u_id",list.get(position).getU_Id());//id
                 context.startActivity(intent);
             }
         });
 
-        if (list.get(position).getCount().equals("0")){
+        if (list.get(position).getCountuid().equals("0")){
             fl_xiaxian.setVisibility(View.INVISIBLE);
         }else {//有下线
             fl_xiaxian.setVisibility(View.VISIBLE);
@@ -123,7 +122,7 @@ public class MemberAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent intent=new Intent(context, MemberActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("a",list.get(position).getH_u_id());
+                    intent.putExtra("a",list.get(position).getU_Id());
                     context.startActivity(intent);
                 }
             });

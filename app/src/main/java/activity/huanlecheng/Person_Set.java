@@ -8,7 +8,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,15 +23,11 @@ import bean.LoginGXBean;
 import bean.TuichuBean;
 import constants.Constants;
 import constants.RUser;
-import constants.UserInfo;
 import http.AjaxCallBack;
-import http.AjaxParams;
 import util.ShowToast;
-import util.ToastUtil;
 
 public class Person_Set extends BaseActivity {
-    private static final String TAG = "Person_Set";
-    private RelativeLayout xgyhzhxmLayout, xiugaimmLayout, safeLayout, xgmonpwLayout,
+    private RelativeLayout xiugaimmLayout, safeLayout, xgmonpwLayout,
             cardbdLayout, cardbdname, circleflms;
     //private ToggleButton mToggleButton;
     private Button title_left_btn;
@@ -46,7 +41,6 @@ public class Person_Set extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myset);
-        xgyhzhxmLayout = (RelativeLayout) findViewById(R.id.xgyhzhxm);
         title_left_btn = (Button) findViewById(R.id.title_left_btn);
         title_left_btn.setBackgroundResource(R.drawable.aar);
         title_left_btn.setOnClickListener(new OnClickListener() {
@@ -124,16 +118,6 @@ public class Person_Set extends BaseActivity {
 
             }
         });
-        xgyhzhxmLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!"".equals(userInfo.getRealName())) {
-                    ToastUtil.showToast(Person_Set.this, "已绑定, 无法自行修改");
-                } else {
-                    goActivity();
-                }
-            }
-        });
         xiugaimmLayout.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -184,14 +168,9 @@ public class Person_Set extends BaseActivity {
         });
     }
 
-    private void goActivity() {
-        Intent intent = new Intent(this, BindingBankNameActivity.class);
-        startActivity(intent);
-    }
-
     public void Updatemm() {
         wh.configCookieStore(RUser.cookieStore);
-        wh.get(Constants.getUrl() + Constants.tuichu, new AjaxCallBack<String>() {
+        wh.get(Constants.getUrl()+Constants.tuichu, new AjaxCallBack<String>() {
             @Override
             public void onStart() {// 开始http请求的时候回调
                 // TODO Auto-generated method stub
@@ -245,15 +224,15 @@ public class Person_Set extends BaseActivity {
                         }.getType();
                         TuichuBean tuichuBean = gson.fromJson(str, type);
                         MyApplication.getInstance().isAutoLogin(false);
-                        //    if (loginBean.getData().equals("")) {
-                        //showToast(loginBean.getMsg());
-                        userInfo.cleanUserinfo();
-                        MyApplication.finishAllActivity();
-                        intent = new Intent(getApplication(), LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        finish();
+                    //    if (loginBean.getData().equals("")) {
+                            //showToast(loginBean.getMsg());
+                            userInfo.cleanUserinfo();
+                            MyApplication.finishAllActivity();
+                            intent = new Intent(getApplication(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                            finish();
                    /*     } else {
                             userInfo.cleanUserinfo();
                             MyApplication.finishAllActivity();
@@ -274,21 +253,16 @@ public class Person_Set extends BaseActivity {
                     java.lang.reflect.Type type2 = new TypeToken<LoginGXBean>() {
                     }.getType();
                     LoginGXBean loginGXBean = gson.fromJson(str, type2);
-                    if (loginGXBean.getData().getH_u_safety_qid().equals("0")) {//没有设置密保,设置
+                    if (loginGXBean.getData().getH_u_safety_qid().equals("0")){//没有设置密保,设置
                         Intent intent1 = new Intent(Person_Set.this, Safe_Page.class);
                         startActivity(intent1);
-                    } else {//设置了修改
+                    }else {//设置了修改
                         Intent in = new Intent(Person_Set.this, XiuGaiActivity.class);
-                        String a = loginGXBean.getData().getH_u_safety_qid();
+                        String a=loginGXBean.getData().getH_u_safety_qid();
                         in.putExtra("wenti", loginGXBean.getData().getH_u_safety_qid());
                         startActivity(in);
                     }
                     break;
-                case 2:
-                    String yhStr = (String) msg.obj;
-                    Log.e(TAG, yhStr);
-                    break;
-
             }
         }
     };

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +36,6 @@ import constants.Constants;
 import constants.RUser;
 import http.AjaxCallBack;
 import http.AjaxParams;
-import util.JsonUtil;
 import util.ShowToast;
 import view.XListView;
 
@@ -48,7 +46,6 @@ import view.XListView;
 
 public class MemberActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String TAG = "MemberActivity";
     private EditText etname;
     private EditText min_money;
     private EditText max_money;
@@ -102,11 +99,11 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
                 String minmoney = min_money.getText().toString();
                 String maxmoney = max_money.getText().toString();
                 if (type.equals("全部")) {
-                    getUrlList("-1");
+                    getUrlList(u_id, key, "0", minmoney, maxmoney);
                 } else if (type.equals("在线")) {
-                    getUrlList("1");
+                    getUrlList(u_id, key, "1", minmoney, maxmoney);
                 } else if (type.equals("离线")) {
-                    getUrlList("0");
+                    getUrlList(u_id, key, "2", minmoney, maxmoney);
 
                 }
             }
@@ -145,7 +142,7 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
         tv_memebr_state = (TextView) findViewById(R.id.tv_memebr_state);
         ll_saixuan.setOnClickListener(this);
         huiyuan_listview = (XListView) findViewById(R.id.huiyuan_listview);
-        getUrlList("0");
+        getUrlList(u_id, "", "0", "", "");
         min_money.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         max_money.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         mlist = new ArrayList<>();
@@ -154,13 +151,6 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
         huiyuan_listview.setPullLoadEnable(false);
         huiyuan_listview.setPullRefreshEnable(false);
         showPopupWindow();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(bdr);
 
     }
 
@@ -207,16 +197,25 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
     /**
      * listview的网络请求
      *
+     * @param key
      * @param type
+     * @param minmoney
+     * @param maxmoney
      */
-    public void getUrlList(String type) {
+    public void getUrlList(String uid, String key, String type, String minmoney, String maxmoney) {
+        //  http://lf.client.cool/?Model=User&Action=MyTeam_List&pagenum=100&showpagenum=1&UserId=17080
         AjaxParams params = new AjaxParams();
-        params.put("pid", userInfo.getUid());
-        params.put("showtime", "yes");
-        params.put("showpagenum", type);
-        params.put("pagenum", "10");
+        params.put("Model", "User");
+        params.put("Action", "MyTeam_List");
+        params.put("pagenum", "100");
+        params.put("showpagenum", "1");
+        params.put("UserId", uid);
+        params.put("key", key);
+        params.put("type", type);
+        params.put("minmoney", minmoney);
+        params.put("maxmoney", maxmoney);
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + Constants.teamManagement, params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -246,7 +245,7 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
                 txt_neterr.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getUrlList("0");
+                        getUrlList(u_id, "", "0", "", "");
                     }
                 });
             }
@@ -260,16 +259,14 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
             switch (msg.what) {
                 case 0:
                     String string = (String) msg.obj;
-                    Log.i(TAG, string);
-                    MemberGuanliBean memberGuanliBean = JsonUtil.parseJsonToBean(string, MemberGuanliBean.class);
-
-//                    java.lang.reflect.Type type = new TypeToken<MemberGuanliBean>() {
-//                    }.getType();
-//                    Gson gson = new Gson();
-                    List<MemberGuanliBean.DataBean.ListBean> list = new ArrayList<>();
-                    if (memberGuanliBean.getData().getList().size() != 0) {
-                        for (int i = 0; i < memberGuanliBean.getData().getList().size(); i++) {
-                            list.add(memberGuanliBean.getData().getList().get(i));
+                    java.lang.reflect.Type type = new TypeToken<MemberGuanliBean>() {
+                    }.getType();
+                    Gson gson = new Gson();
+                    List<MsgBean> list = new ArrayList<>();
+                    MemberGuanliBean memberGuanliBean = gson.fromJson(string, type);
+                    if (memberGuanliBean.getMsg().size() != 0) {
+                        for (int i = 0; i < memberGuanliBean.getMsg().size(); i++) {
+                            list.add(memberGuanliBean.getMsg().get(i));
                         }
                     }
                     memberAdapter.setData(list, time);
@@ -291,11 +288,11 @@ public class MemberActivity extends BaseActivity implements View.OnClickListener
                 String minmoney = min_money.getText().toString();
                 String maxmoney = max_money.getText().toString();
                 if (type.equals("全部")) {
-                    getUrlList("-1");
+                    getUrlList(u_id, key, "0", minmoney, maxmoney);
                 } else if (type.equals("在线")) {
-                    getUrlList("1");
+                    getUrlList(u_id, key, "1", minmoney, maxmoney);
                 } else if (type.equals("离线")) {
-                    getUrlList("0");
+                    getUrlList(u_id, key, "2", minmoney, maxmoney);
                 }
                 break;
             default:

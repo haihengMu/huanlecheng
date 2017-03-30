@@ -9,35 +9,24 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import bean.ProvinceCityBean;
-import constants.Constants;
-import constants.RUser;
 import constants.UserInfo;
 import fragment.BuyFragment;
 import fragment.HomeFragment;
 import fragment.InfoFragment;
 import fragment.MyFragment;
-import http.AjaxCallBack;
-import http.AjaxParams;
-import util.CacheUtils;
-import util.JsonUtil;
-import util.ShowToast;
 import view.NestRadioGroup;
 
 
-public class MainActivity extends BaseActivity implements
+public class MainActivity extends FragmentActivity implements
         NestRadioGroup.OnCheckedChangeListener {
-    private static final String TAG = "MainActivity";
     private static FragmentManager mFragmentManager;
     private static Fragment[] fragments = new Fragment[4];
     UserInfo userinfo;
-    // 定义一个变量，来标识是否退出.
+    // 定义一个变量，来标识是否退出
     private static boolean isExit = false;
     private static RadioButton home;
     private static RadioButton buy;
@@ -50,7 +39,6 @@ public class MainActivity extends BaseActivity implements
         setContentView(R.layout.activity_main);
         MyApplication.activityList.add(this);
         userinfo = new UserInfo(getApplicationContext());
-        getProvinceCity();
         NestRadioGroup bottom = (NestRadioGroup) findViewById(R.id.bottom);
         int red = 63;
         int green = 65;
@@ -143,13 +131,12 @@ public class MainActivity extends BaseActivity implements
 //		home.setChecked(true);
     }
 
-    public static void closeAll() {
+    public static void closeAll(){
         mFragmentManager.getFragments().clear();
 //		fragments = new Fragment[3];
         changeFragment(0);
         home.setChecked(true);
     }
-
     @Override
     protected void onDestroy() {
         MyApplication.activityList.remove(this);
@@ -178,62 +165,11 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    private void getProvinceCity() {
-        /// static/model/public/json/address.json
-        AjaxParams params = new AjaxParams();
-        wh.configCookieStore(RUser.cookieStore);
-        wh.get(Constants.getUrl() + Constants.address, params, new AjaxCallBack<String>() {
-            @Override
-            public void onStart() {// 开始http请求的时候回调
-                // TODO Auto-generated method stub
-                super.onStart();
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {// 每1秒钟自动被回调一次
-                // TODO Auto-generated method stub
-                super.onLoading(count, current);
-
-            }
-
-            @Override
-            public void onSuccess(String t) {// 加载成功的时候回调
-                // TODO Auto-generated method stub
-                super.onSuccess(t);
-                Message msg = new Message();
-                msg.what = 2;
-                msg.obj = t;
-                mHandler.sendMessage(msg);
-            }
-
-            @Override
-            public void onFailure(Throwable t, int errorNo, String strMsg) { // 加载失败的时候回调
-                // TODO Auto-generated method stub
-                super.onFailure(t, errorNo, strMsg);
-            }
-
-        });
-    }
-
-
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             isExit = false;
-            switch (msg.what) {
-                case 2:
-                    String provinceCache = (String) msg.obj;
-                    Log.d(TAG, provinceCache);
-                    ProvinceCityBean provinceCityBean = JsonUtil.parseJsonToBean(provinceCache, ProvinceCityBean.class);
-                    if (provinceCityBean.getData().size() != 0) {
-                        CacheUtils.setCache(MainActivity.this, Constants.address, provinceCache);
-                    } else {
-                        Log.d(TAG, "获取地址列表失败");
-                    }
-                    break;
-            }
         }
     };
 }

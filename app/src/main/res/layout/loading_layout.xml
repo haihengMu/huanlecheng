@@ -3,9 +3,9 @@
     android:id="@+id/view_loading"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@color/white"
     android:gravity="center_vertical|center_horizontal"
-    android:orientation="horizontal">
+    android:orientation="horizontal" >
 
     <ProgressBar
         android:id="@+id/load_progressBar"

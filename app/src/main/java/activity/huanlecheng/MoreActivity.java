@@ -29,6 +29,8 @@ import java.util.List;
 
 import adapter.BuyChildAdapter;
 import adapter.MoreDownListAdapter;
+import adapter.UpLieAdapter;
+import bean.CaiPiaoNewTopBean;
 import bean.NewPlayGameName;
 import bean.NewPlayGameNameChild;
 import bean.PlayGameNewChildBean;
@@ -95,8 +97,8 @@ public class MoreActivity extends BaseActivity implements View.OnClickListener, 
     };
 
     private void initUp() {
-       /* List<CaipiaoTopBean> liePlaynames = caipiaoDao.findAllTop();
-        List<CaipiaoTopBean> mlist = new ArrayList<>();
+        List<CaiPiaoNewTopBean> liePlaynames = caipiaoDao.findAllnewTop();
+        List<CaiPiaoNewTopBean> mlist = new ArrayList<>();
         UpLieAdapter lieAdapter = new UpLieAdapter(getApplicationContext());
         gv_up.setAdapter(lieAdapter);
         if (liePlaynames.size() < 0) {
@@ -107,7 +109,7 @@ public class MoreActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
             lieAdapter.setData(mlist);
-        }*/
+        }
     }
 
     private void initHeadView() {
@@ -246,13 +248,8 @@ public class MoreActivity extends BaseActivity implements View.OnClickListener, 
      * @throws Exception
      */
     public void requestInfo(final String id) throws Exception {
-      /*  AjaxParams params = new AjaxParams();
-        params.put("Model", "System");
-        params.put("Action", "GetSystemConfig");
-        params.put("models", "HX_Game_Play");*/
         wh.configCookieStore(RUser.cookieStore);
         wh.post(Constants.getUrl()+Constants.game_play_new_xiangqing+id+".json", new AjaxCallBack<String>() {
-//        wh.post(Constants.getUrl()+Constants.game_play_new, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -324,6 +321,7 @@ public class MoreActivity extends BaseActivity implements View.OnClickListener, 
                                 System.out.println("有相同的!!" + i);
                             }
                         }
+
                         moreDownListAdapter.setData(mList, title);
                         ll_lay.setVisibility(View.VISIBLE);
                         iv_imageview.setVisibility(View.VISIBLE);
@@ -341,7 +339,7 @@ public class MoreActivity extends BaseActivity implements View.OnClickListener, 
                     if (playGameType.getData().size() <= 0) {
                     } else {
                         for (int i = 0; i < playGameType.getData().size(); i++) {
-                            if (playGameType.getData().get(i).getH_g_t_nid().equals(id)) {
+                            if (playGameType.getData().get(i).getH_g_t_nid().equals(id)&&!playGameType.getData().get(i).getH_g_t_off().equals("0")) {
                                 playGameTypeList.add(playGameType.getData().get(i));
                             }
                         }

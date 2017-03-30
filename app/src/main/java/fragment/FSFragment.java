@@ -32,22 +32,35 @@ import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import WanFa.BDW;
+import WanFa.DXQianSan;
+import WanFa.DXQianer;
+import WanFa.DaXiaoDS;
 import WanFa.ErXing;
 import WanFa.FivePlay;
+import WanFa.HZWs;
+import WanFa.HZerx;
+import WanFa.HZqiansan;
+import WanFa.HZzuxuan;
+import WanFa.KD;
+import WanFa.KDE;
+import WanFa.Other;
 import WanFa.QerZX;
 import WanFa.QianSi;
+import WanFa.QuWei;
+import WanFa.RSFS;
+import WanFa.ReFs;
+import WanFa.Rssfs;
 import WanFa.Sanxing;
 import WanFa.SiXing;
 import WanFa.SiZhuhe;
 import WanFa.WXZhe;
+import WanFa.ZLDT;
 import WanFa.ZuLiu;
 import WanFa.ZuSanDT;
 import WanFa.ZuXuanS;
@@ -60,7 +73,6 @@ import adapter.NewPlayAdapter;
 import bean.CaiPiaoNewTopBean;
 import bean.CaipiaoBean;
 import bean.DQIssuseBean;
-import bean.FirstEvent;
 import bean.NewPlayGameName;
 import bean.NewPlayGameNameChild;
 import bean.NewPlayGameNameChildMode;
@@ -148,11 +160,27 @@ public class FSFragment extends BaseFragment implements View.OnClickListener, XL
     private QerZX qerZX = new QerZX();
     private ZuSanDT zuSanDT = new ZuSanDT();
     private ZuLiu zuLiu = new ZuLiu();
+    private ZLDT zldt = new ZLDT();
+    private BDW bdw = new BDW();
+    private KD kd = new KD();
+    private KDE kde = new KDE();
+    private RSFS rsfs = new RSFS();
+    private Rssfs rssfs = new Rssfs();
+    private ReFs reFs = new ReFs();
+    private DaXiaoDS daXiaoDS = new DaXiaoDS();
+    private HZqiansan hZqiansan = new HZqiansan();
+    private HZerx hZerx = new HZerx();
+    private HZzuxuan hZzuxuan = new HZzuxuan();
+    private HZWs hzWs = new HZWs();
+    private QuWei quWei = new QuWei();
+    private DXQianSan dxQianSan = new DXQianSan();
+    private DXQianer dxQianer = new DXQianer();
+    private Other other = new Other();
     private long dtime;
     private String url = "";
     private CaipiaoDao caipiaoDao;
     private List<CaipiaoBean> caipiaoBeanList;
-    private EventBus eventBus;
+    private boolean b1;
 
     @Nullable
     @Override
@@ -165,25 +193,7 @@ public class FSFragment extends BaseFragment implements View.OnClickListener, XL
         intentFilter.addAction("action.compound");
         intentFilter.addAction("action.big");
         context.registerReceiver(mRefreshBroadcastReceiver, intentFilter);
-        eventBus = EventBus.getDefault();
-        boolean registered = eventBus.isRegistered(this);
-        if (!registered) {
-            eventBus.register(this);
-        }
         return view;
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        eventBus.unregister(this);
-    }
-
-    @Subscribe
-    public void onEventMainThread(FirstEvent event) {
-        String msg = "FSFragment收到了消息：" + event.toString();
-        Log.e("FSFragment", msg);
     }
 
     public void initDataF(CaiPiaoNewTopBean caiPiaoNewTopBean, String title, String id, Application application) {
@@ -244,6 +254,7 @@ public class FSFragment extends BaseFragment implements View.OnClickListener, XL
         newPlayAdapter = new NewPlayAdapter(getActivity());
         main_lv_list.setAdapter(newPlayAdapter);
         initDData();
+
     }
 
     private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
@@ -464,7 +475,8 @@ public class FSFragment extends BaseFragment implements View.OnClickListener, XL
                         one_zhu.setText(zuXuanS.zuliu(posString));
                         url = zuXuanS.purl(posString);
                         initFDian();
-                    } else if (name.equals("前三组三") || name.equals("中三组三") || name.equals("后三组三")) {
+                    } else if (name.equals("前三组三") || name.equals("中三组三") || name.equals("后三组三")||name.indexOf("组三组选")!=-1
+                            ) {
                         one_zhu.setText(qerZX.FiveGame(posString));
                         url = qerZX.FiveUrl(posString);
                         initFDian();
@@ -472,13 +484,80 @@ public class FSFragment extends BaseFragment implements View.OnClickListener, XL
                         one_zhu.setText(zuSanDT.FiveGame(it, posString));
                         url = zuSanDT.FiveUrl(it, posString);
                         initFDian();
-                    } else if (name.equals("前三组六") || name.equals("中三组六") || name.equals("后三组六")) {
+                    } else if (name.equals("前三组六") || name.equals("中三组六") || name.equals("后三组六") || name.equals("后三组六")
+                            || name.equals("前三复式组选") || name.equals("中三复式组选") || name.equals("后三复式组选")||name.indexOf("组六组选")!=-1) {
                         one_zhu.setText(zuLiu.zuliu(posString));
                         url = zuLiu.purl(posString);
                         initFDian();
-                        // }else if (){
-
+                    } else if (name.equals("前三组六胆拖") || name.equals("中三组六胆拖") || name.equals("后三组六胆拖")) {
+                        one_zhu.setText(zldt.zuliu(it, posString));
+                        url = zldt.purl(it, posString);
+                        initFDian();
+                    } else if (name.equals("前三不定位") || name.equals("中三不定位") || name.equals("后三不定位")) {
+                        one_zhu.setText(bdw.FiveGame(posString));
+                        url = bdw.FiveUrl(posString);
+                        initFDian();
+                    } else if (name.equals("前三跨度") || name.equals("中三跨度") || name.equals("后三跨度")) {
+                        one_zhu.setText(kd.code(posString));
+                        url = kd.purl(posString);
+                        initFDian();
+                    } else if (name.equals("前二跨度") || name.equals("后二跨度")) {
+                        one_zhu.setText(kde.code(posString));
+                        url = kde.purl(posString);
+                        initFDian();
+                    } else if (name.equals("任四复式")) {
+                        one_zhu.setText(rsfs.FiveGame(it, posString));
+                        url = rsfs.FiveUrl(it, posString);
+                        initFDian();
+                    } else if (name.equals("任三复式")) {
+                        one_zhu.setText(rssfs.FiveGame(it, posString));
+                        url = rssfs.FiveUrl(it, posString);
+                        initFDian();
+                    } else if (name.equals("任二复式")) {
+                        one_zhu.setText(reFs.FiveGame(it, posString));
+                        url = reFs.FiveUrl(it, posString);
+                        initFDian();
+                    } else if (name.equals("前二大小") || name.equals("后二大小")) {
+                        one_zhu.setText(daXiaoDS.FiveGame(it, posString));
+                        url = daXiaoDS.FiveUrl(it, posString);
+                        initFDian();
+                    } else if (name.equals("前三直选和值") || name.equals("中三直选和值") || name.equals("后三直选和值")) {
+                        one_zhu.setText(hZqiansan.code(posString));
+                        url = hZqiansan.purl(posString);
+                        initFDian();
+                    } else if (name.equals("前二直选和值") || name.equals("后二直选和值")) {
+                        one_zhu.setText(hZerx.code(posString));
+                        url = hZerx.purl(posString);
+                        initFDian();
+                    } else if (name.equals("前三组选和值") || name.equals("中三组选和值") || name.equals("后三组选和值")) {
+                        one_zhu.setText(hZzuxuan.code(posString));
+                        url = hZzuxuan.purl(posString);
+                        initFDian();
+                    } else if (name.equals("前三尾数和值") || name.equals("中三尾数和值") || name.equals("后三尾数和值")) {
+                        one_zhu.setText(hzWs.code(posString));
+                        url = hzWs.purl(posString);
+                        initFDian();
+                    } else if (name.equals("万千") || name.equals("万百") ||
+                            name.equals("一帆风顺") || name.equals("好事成双") ||
+                            name.equals("三星报喜") || name.equals("四季发财") || name.equals("万十") || name.equals("万个") || name.equals("千百")
+                            || name.equals("千十") || name.equals("千个") || name.equals("百十") || name.equals("百个") || name.equals("十个")
+                            ) {
+                        one_zhu.setText(quWei.FiveGame(posString));
+                        url = quWei.FiveUrl(posString);
+                        initFDian();
                     }
+                } else if (name.equals("前三复式直选") || name.equals("中三复式直选") || name.equals("后三复式直选")||name.indexOf("复式直选")!=-1) {
+                    one_zhu.setText(dxQianSan.FiveGame(it, posString));
+                    url = dxQianSan.FiveUrl(it, posString);
+                    initFDian();
+                } else if (name.equals("前二复式直选") || name.equals("中二复式直选") || name.equals("后二复式直选")) {
+                    one_zhu.setText(dxQianer.FiveGame(it, posString));
+                    url = dxQianer.FiveUrl(it, posString);
+                    initFDian();
+                }else{
+                    one_zhu.setText(other.FiveGame(it, posString));
+                    url = other.FiveUrl(it, posString);
+                    initFDian();
                 }
             } else if (action.equals("action.big")) {
                 String posString = intent.getStringExtra("position");
@@ -625,6 +704,7 @@ public class FSFragment extends BaseFragment implements View.OnClickListener, XL
                                 Log.e(TAG, name);
                                 NewPlayGameNameChildMode h_g_p_config = newPlayGameNameChild.getH_g_p_config();
                                 h_g_p_configList = h_g_p_config.getList();
+
                             }
                         }
                         newPlayAdapter.setDate(h_g_p_configList, name, pid1);

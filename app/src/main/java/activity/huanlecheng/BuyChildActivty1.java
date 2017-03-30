@@ -36,13 +36,15 @@ import java.util.List;
 import adapter.BuyChildListAdapter;
 import adapter.MoreDownListAdapter;
 import adapter.MyPagerAdaper;
-import bean.CaipiaoTopBean;
+import bean.CaiPiaoNewTopBean;
 import bean.GetHistoryNewWinCodeBean;
 import bean.GetTheIssueAndTimeBean;
 import bean.HX_Game_PlayResponseModel;
-import bean.UserBettingInfo;
+import bean.NewPlayGameName;
 import constants.Constants;
 import constants.RUser;
+import fragment.DanFragment;
+import fragment.FSFragment;
 import http.AjaxCallBack;
 import http.AjaxParams;
 import http.WiseHttp;
@@ -61,22 +63,15 @@ public class BuyChildActivty1 extends BaseActivity implements
 
     private String id;
     private String title;
-    private Gson gson;
-    private UserBettingInfo hp;
     private List<HX_Game_PlayResponseModel> mList;//recycleview解析数据的集合
     private Button title_left_btn;
     private TextView title_textview;
     private XListView buy_child_listview;
-    //设置手指按下的点(x1,y1),手指离开屏幕的点(x2,y2)
-    float x1 = 0;
-    float x2 = 0;
-    float y1 = 0;
-    float y2 = 0;
     private LinearLayout view_loading;
     private LinearLayout view_load_fail;
     private FrameLayout fl_fragment;
     private TextView txt_neterr;
-   // private List<GetHistoryWinCodeBean> myList;//开奖信息listview的数据集合
+    // private List<GetHistoryWinCodeBean> myList;//开奖信息listview的数据集合
     private BuyChildListAdapter buyChildListAdapter;
     private TextView tv_overtime;
     private GetTheIssueAndTimeBean gtatb;
@@ -95,14 +90,14 @@ public class BuyChildActivty1 extends BaseActivity implements
     private HelpHorizontalScrollView hhsv;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
-    private List<Fragment> fragmentlist;
+
     private MyPagerAdaper myPagerAdaper;
     private ViewPager vp_viewpager;
     private TextView iv_more;
     private String[] arr;
     private String[] arr1;
     private CaipiaoDao caipiaoDao;
-    private List<CaipiaoTopBean> caipiaoTopBeen;
+    private List<CaiPiaoNewTopBean> caiPiaoNewTopBeen;
     private List<HX_Game_PlayResponseModel> mmlist;
     private List<HX_Game_PlayResponseModel> mmmlist;
     private MoreDownListAdapter moreDownListAdapter;
@@ -111,7 +106,6 @@ public class BuyChildActivty1 extends BaseActivity implements
     private TextView tv_jiesu;
     private LinearLayout ll_layout_kj;
     private ProgressBar pb_waite;
-    private LinearLayout ll_danshi;
     private RelativeLayout rl_yindao;
     private RelativeLayout rl_yindao1;
     private SharedPreferences sharedPreferences;
@@ -119,6 +113,7 @@ public class BuyChildActivty1 extends BaseActivity implements
     private String packageInfostr;
     private LinearLayout ll_kj;
     private LinearLayout ll_kj1;
+    private List<Fragment> fragmentlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +123,7 @@ public class BuyChildActivty1 extends BaseActivity implements
 
     private void initView() {
         setContentView(R.layout.activity_buy_child);
+
         title_left_btn = (Button) findViewById(R.id.title_left_btn);
         title_textview = (TextView) findViewById(R.id.title_textview);
         view_loading = (LinearLayout) findViewById(R.id.view_loading);
@@ -138,12 +134,13 @@ public class BuyChildActivty1 extends BaseActivity implements
         ll_kj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buy_child_listview.setVisibility(View.VISIBLE);
+               /* buy_child_listview.setVisibility(View.VISIBLE);
                 ll_kj.setVisibility(View.GONE);
                 ll_kj1.setVisibility(View.VISIBLE);
                 Intent intent = new Intent();
                 intent.setAction("action.down");
-                sendBroadcast(intent);
+                sendBroadcast(intent);*/
+
             }
         });
         ll_kj1.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +167,6 @@ public class BuyChildActivty1 extends BaseActivity implements
         id = getIntent().getStringExtra("id");
         title = getIntent().getStringExtra("title");
         title_textview.setText(title);
-        hp = new UserBettingInfo();
         mList = new ArrayList<>();
         iv_more = (TextView) findViewById(R.id.iv_more);
         iv_more.setOnClickListener(new View.OnClickListener() {
@@ -183,9 +179,9 @@ public class BuyChildActivty1 extends BaseActivity implements
 
             }
         });
-     //   initListView();//隐藏头的listview
-       // initData();//倒计时
-      //  initTabHor();
+        //   initListView();//隐藏头的listview
+        // initData();//倒计时
+        //  initTabHor();
         // initLoad();//等待页面
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.topview");
@@ -198,6 +194,7 @@ public class BuyChildActivty1 extends BaseActivity implements
                 rl_yindao.setVisibility(View.GONE);
             }
         });
+        initTabHor();
     }
 
     private void initYinDao() {
@@ -240,137 +237,134 @@ public class BuyChildActivty1 extends BaseActivity implements
         caipiaoDao = new CaipiaoDao(getApplicationContext());
         hhsv = (HelpHorizontalScrollView) findViewById(R.id.hhsvd_tab);
         vp_viewpager = (ViewPager) findViewById(R.id.vp_viewpager);
-      //  initObjd();
+        initObjd();
     }
 
     private void initObjd() {
-       /* caipiaoTopBeen = caipiaoDao.findAllTop();
-        List<CaipiaoTopBean> mlist = new ArrayList<>();
-        if (caipiaoTopBeen.size() <= 0) {
-            getUrl();
+        caiPiaoNewTopBeen = caipiaoDao.findAllnewTop();
+        List<CaiPiaoNewTopBean> mlist = new ArrayList<>();
+        if (caiPiaoNewTopBeen.size() <= 0) {
+               getUrl(id);
         } else {
-            for (int i = 0; i < caipiaoTopBeen.size(); i++) {
-                if (caipiaoTopBeen.get(i).getTitle().equals(title)) {
-                    mlist.add(caipiaoTopBeen.get(i));
+            for (int i = 0; i < caiPiaoNewTopBeen.size(); i++) {
+                if (caiPiaoNewTopBeen.get(i).getTitle().equals(title)) {
+                    mlist.add(caiPiaoNewTopBeen.get(i));
                 }
             }
             if (mlist.size() <= 0) {
-                getUrl();
+                   getUrl(id);
             } else {
                 initObj(mlist);
             }
-        }*/
+        }
     }
 
-    private void initObj(List<CaipiaoTopBean> tablist) {
+    private void initObj(List<CaiPiaoNewTopBean> tablist) {
         arr = new String[tablist.size()];
         for (int i = 0; i < tablist.size(); i++) {
-          //  arr[i] = tablist.get(i).getG_P_Name();
+            arr[i] = tablist.get(i).getH_g_p_name();
         }
         hhsv.setTitle(arr);
         hhsv.setTextColor(Color.parseColor("#ffffff"));
         hhsv.setTextColorResourceId(R.color.golden);
         fragmentlist = new ArrayList<>();
-
         for (int i = 0; i < tablist.size(); i++) {
-          //  Fragment1 fragment1 = new Fragment1();
-            if (tablist.get(i).getG_P_NumberName().indexOf("=") > -1) {
-                String one[] = tablist.get(i).getG_P_NumberName()
-                        .split("\\|");
-                String two[] = one[1].split("=");
-                String three = two[0];
-                // 区分玩法
-                String idiea = "";
-                if (tablist.get(i).getG_P_Name().indexOf("定位胆") > -1) {
-                    if (tablist.get(i).getG_P_Name().equals("定位胆")) {
-                        idiea = "定位胆";
-                    } else {
-                        idiea = "不定位胆";
-                    }
-                } else if (tablist.get(i).getG_P_Name().equals("任三和值")) {
-                    idiea = "任三和值";
-                } else if (three.equals("Size")) {
-                    idiea = "Size";
-                } else if (three.equals("Mono")) {
-                    idiea = "Mono";
-                } else if (tablist.get(i).getG_P_Name().equals("任三和值")) {
-                    idiea = "任三和值";
-                } else if (tablist.get(i).getG_P_Name().equals("任三组三")) {
-                    idiea = "任三组三";
-                } else if (tablist.get(i).getG_P_Name().equals("任三组六")) {
-                    idiea = "任三组六";
-                } else if (tablist.get(i).getG_P_Name().equals("任二组选")) {
-                    idiea = "任二组选";
-                } else if (tablist.get(i).getG_P_Name().equals("三同号通选")) {
-                    idiea = "三同号通选";
-                } else if (three.equals("组六")) {
-                    idiea = "组六";
-                } else if (three.equals("组三")) {
-                    idiea = "组三";
-                } else if (three.equals("和值")) {
-                    idiea = "和值";
-                } else if (three.equals("不定位")) {
-                    idiea = "不定位";
-                } else if (three.equals("组选")) {
-                    idiea = "组选";
-                } else if (three.equals("定单双")) {
-                    idiea = "定单双";
-                } else if (three.equals("猜中位")) {
-                    idiea = "猜中位";
-                } else if (three.equals("任选一")) {
-                    idiea = "任选一";
-                } else if (three.equals("任选二")) {
-                    idiea = "任选二";
-                } else if (three.equals("任选三")) {
-                    idiea = "任选三";
-                } else if (three.equals("任选四")) {
-                    idiea = "任选四";
-                } else if (three.equals("任选五")) {
-                    idiea = "任选五";
-                } else if (three.equals("任选六")) {
-                    idiea = "任选六";
-                } else if (three.equals("任选七")) {
-                    idiea = "任选七";
-                } else if (three.equals("任选八")) {
-                    idiea = "任选八";
-                } else if (three.equals("第一位")
-                        && tablist.get(i).getG_P_Name().equals("前二直选复式")) {
-                    idiea = "前二直选复式";
-                } else if (three.equals("第一位")) {
-                    idiea = "第一位";
-                } else if (three.equals("号码") && i == 5) {
-                    idiea = "三不同";
-                } else if (three.equals("号码") && i == 6) {
-                    idiea = "二不同";
-                } else if (three.equals("第一名")) {
-                    idiea = "第一名";
-                } else if (tablist.get(i).getG_P_Name().equals("常规录入") || one[0].length() == 3) {
-                    idiea = "猜前三常规录入";
-                } else if (Integer.valueOf(tablist.get(i)
-                        .getG_P_NumberName().split("\\|")[4]) < tablist
-                        .get(i).getG_P_NumberName().split("\\|")[0]
-                        .length()) {
-                    idiea = "任复试";
-
-                }
-                //复试
-              //  fragment1.initData(tablist.get(i), idiea, getApplication(), title);
+            if (tablist.get(i).getH_g_p_name().indexOf("单式") != -1 || tablist.get(i).getH_g_p_name().indexOf("混合") != -1) {
+                DanFragment danFragment = new DanFragment();
+                danFragment.initDataD(tablist.get(i), title);
+                fragmentlist.add(danFragment);
             } else {
-                //单式,手写
-             //   String idiea = null;
-               // fragment1.initDataD(tablist.get(i), title);
-
+                FSFragment fsFragment = new FSFragment();
+                 fsFragment.initDataF(tablist.get(i), title,id,getApplication());
+                fragmentlist.add(fsFragment);
             }
-           // fragmentlist.add(fragment1);
-
         }
         hhsv.setspace(50);
         myPagerAdaper = new MyPagerAdaper(this.getSupportFragmentManager(), fragmentlist, tablist, getApplication());
         vp_viewpager.setAdapter(myPagerAdaper);
         hhsv.setViewPager(vp_viewpager);
+      /*  for (int i = 0; i < tablist.size(); i++) {
+            Fragment1 fragment1 = new Fragment1();
+            if (tablist.get(i).getH_g_p_name().indexOf("单式") == -1 || tablist.get(i).getH_g_p_name().indexOf("混合") == -1) {//复试
+                // 区分玩法
+                String idiea = "";
+                if (tablist.get(i).getH_g_p_name().indexOf("定位胆") > -1) {
+                    if (tablist.get(i).getH_g_p_name().equals("定位胆")) {
+                        idiea = "定位胆";
+                    } else {
+                        idiea = "不定位胆";
+                    }
+                } else if (tablist.get(i).getH_g_p_name().equals("任三和值")) {
+                    idiea = "任三和值";
+                } else  if (tablist.get(i).getH_g_p_name().equals("任三和值")) {
+                    idiea = "任三和值";
+                } else if (tablist.get(i).getH_g_p_name().equals("任三组三")) {
+                    idiea = "任三组三";
+                } else if (tablist.get(i).getH_g_p_name().equals("任三组六")) {
+                    idiea = "任三组六";
+                } else if (tablist.get(i).getH_g_p_name().equals("任二组选")) {
+                    idiea = "任二组选";
+                } else if (tablist.get(i).getH_g_p_name().equals("三同号通选")) {
+                    idiea = "三同号通选";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("组六")!=-1) {
+                    idiea = "组六";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("组三")!=-1) {
+                    idiea = "组三";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("和值")!=-1) {
+                    idiea = "和值";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("不定位")!=-1) {
+                    idiea = "不定位";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("组选")!=-1) {
+                    idiea = "组选";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("定单双")!=-1) {
+                    idiea = "定单双";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("猜中位")!=-1) {
+                    idiea = "猜中位";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选一")!=-1) {
+                    idiea = "任选一";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选二")!=-1) {
+                    idiea = "任选二";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选三")!=-1) {
+                    idiea = "任选三";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选四")!=-1) {
+                    idiea = "任选四";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选五")!=-1) {
+                    idiea = "任选五";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选六")!=-1) {
+                    idiea = "任选六";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选七")!=-1) {
+                    idiea = "任选七";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("任选八")!=-1) {
+                    idiea = "任选八";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("第一位") !=-1&& tablist.get(i).getH_g_p_name().equals("前二直选复式")) {
+                    idiea = "前二直选复式";
+                } else if (tablist.get(i).getH_g_p_name().indexOf("第一位")!=-1) {
+                    idiea = "第一位";
+                } else  if (tablist.get(i).getH_g_p_name().indexOf("第一名")!=-1) {
+                    idiea = "第一名";
+                } else if (tablist.get(i).getH_g_p_name().equals("前三")) {
+                    idiea = "猜前三常规录入";
+                } else if (tablist.get(i).getH_g_p_name().equals("组120")){
+                    idiea = "组120";
+                }else  {
+                    idiea = "任复试";
+                }
+                //复试
+                fragment1.initData(tablist.get(i), idiea, getApplication(), title);
+                fragmentlist.add(fragment1);
+            } else {
+                //单式,手写
+                String idiea = null;
+                fragment1.initDataD(tablist.get(i), title);
+                fragmentlist.add(fragment1);
+            }
+        }*/
+ /*       hhsv.setspace(50);
+        myPagerAdaper = new MyPagerAdaper(this.getSupportFragmentManager(), fragmentlist, tablist, getApplication());
+        vp_viewpager.setAdapter(myPagerAdaper);
+        hhsv.setViewPager(vp_viewpager);*/
 
     }
-
     /**
      * 初始化开奖时间
      */
@@ -416,7 +410,7 @@ public class BuyChildActivty1 extends BaseActivity implements
      */
     private void initListView() {
         buy_child_listview = (XListView) findViewById(R.id.buy_child_listview);
-     //   myList = new ArrayList<>();
+        //   myList = new ArrayList<>();
         buyChildListAdapter = new BuyChildListAdapter(this);
         buy_child_listview.setAdapter(buyChildListAdapter);
         try {
@@ -455,7 +449,7 @@ public class BuyChildActivty1 extends BaseActivity implements
     public void getListViewURL(String id) throws Exception {
 
         wh.configCookieStore(RUser.cookieStore);
-        wh.get(Constants.getUrl()+Constants.kjjilu+id, new AjaxCallBack<String>() {
+        wh.get(Constants.getUrl() + Constants.kjjilu + id, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -473,9 +467,6 @@ public class BuyChildActivty1 extends BaseActivity implements
                 msg.what = 0;
                 msg.obj = s;
                 handler.sendMessage(msg);
-//                buy_child_listview.setPullLoadEnable(false);
-//                buy_child_listview.setPullRefreshEnable(false);
-
             }
 
             @Override
@@ -487,7 +478,6 @@ public class BuyChildActivty1 extends BaseActivity implements
     }
 
     Handler handler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -555,26 +545,24 @@ public class BuyChildActivty1 extends BaseActivity implements
                     break;
                 case 3:
                     String str = (String) msg.obj;
-                    java.lang.reflect.Type type = new TypeToken<UserBettingInfo>() {
+                    java.lang.reflect.Type type = new TypeToken<NewPlayGameName>() {
                     }.getType();
                     Gson gson2 = new Gson();
-//                    UserBettingInfo hxPlay = gson2.fromJson(str, type);
-//                    if (hxPlay.getHX_Game_Play().size() != 0) {
-//                        for (int i = 0; i < hxPlay.getHX_Game_Play().size(); i++) {
-//                            if (hxPlay.getHX_Game_Play().get(i).getG_P_NameId().equals(id)) {
-//                                if (hxPlay.getHX_Game_Play().get(i).getG_P_Name().equals("定位胆")) {
-//                                    caipiaoDao.addtop(hxPlay.getHX_Game_Play().get(i).getG_P_AddTime(), hxPlay.getHX_Game_Play().get(i).getG_P_AmountStep(), hxPlay.getHX_Game_Play().get(i).getG_P_Bonus(), hxPlay.getHX_Game_Play().get(i).getG_P_Decimal(),
-//                                            hxPlay.getHX_Game_Play().get(i).getG_P_Id(), hxPlay.getHX_Game_Play().get(i).getG_P_MaxBetsMoney(), hxPlay.getHX_Game_Play().get(i).getG_P_MaxBonus(), hxPlay.getHX_Game_Play().get(i).getG_P_MaxBonusMode(),
-//                                            hxPlay.getHX_Game_Play().get(i).getG_P_Maximum(), hxPlay.getHX_Game_Play().get(i).getG_P_MaximumBonusRebate(), hxPlay.getHX_Game_Play().get(i).getG_P_MinBetsMoney(), hxPlay.getHX_Game_Play().get(i).getG_P_MinimumBonusRebate(),
-//                                            hxPlay.getHX_Game_Play().get(i).getG_P_Name(), hxPlay.getHX_Game_Play().get(i).getG_P_NameId(), hxPlay.getHX_Game_Play().get(i).getG_P_NumberName(), hxPlay.getHX_Game_Play().get(i).getG_P_Off(), hxPlay.getHX_Game_Play().get(i).getG_P_OneAmount(),
-//                                            hxPlay.getHX_Game_Play().get(i).getG_P_RebateStep(), hxPlay.getHX_Game_Play().get(i).getG_P_ReturnOff(), hxPlay.getHX_Game_Play().get(i).getG_P_Rules(), hxPlay.getHX_Game_Play().get(i).getG_P_Sort(), hxPlay.getHX_Game_Play().get(i).getG_P_Text(),
-//                                            hxPlay.getHX_Game_Play().get(i).getG_P_TypeId(), hxPlay.getHX_Game_Play().get(i).getG_P_WapOff(), title);
-//
-//                                }
-//
-//                            }
-//                        }
-//                    }
+                    NewPlayGameName newPlayGameName = gson2.fromJson(str, type);
+                    if (newPlayGameName.getData().size() != 0) {
+                        for (int i = 0; i < newPlayGameName.getData().size(); i++) {
+                            if (newPlayGameName.getData().get(i).getH_g_p_name().equals("定位胆")) {
+                                caipiaoDao.addnewtop(newPlayGameName.getData().get(i).getH_g_p_name(), newPlayGameName.getData().get(i).getH_g_p_id(), newPlayGameName.getData().get(i).getH_g_p_cid(), newPlayGameName.getData().get(i).getH_g_p_nid(),
+                                        newPlayGameName.getData().get(i).getH_g_p_tid(), newPlayGameName.getData().get(i).getH_g_p_gid(), newPlayGameName.getData().get(i).getH_g_p_rid(),
+                                        newPlayGameName.getData().get(i).getH_g_p_one_amount(), newPlayGameName.getData().get(i).getH_g_p_max_bet_mum(), newPlayGameName.getData().get(i).getH_g_p_bonus(),
+                                        newPlayGameName.getData().get(i).getH_g_p_amount_step(), newPlayGameName.getData().get(i).getH_g_p_rebate_step(),
+                                        newPlayGameName.getData().get(i).getH_g_p_decimal(), newPlayGameName.getData().get(i).getH_g_p_return_off(), newPlayGameName.getData().get(i).getH_g_p_introduction(),
+                                        newPlayGameName.getData().get(i).getH_g_p_example(), newPlayGameName.getData().get(i).getH_g_p_max_imumbonus_rebate(), newPlayGameName.getData().get(i).getH_g_p_mini_mumbonus_rebate(),
+                                        newPlayGameName.getData().get(i).getH_g_p_mini_bet_money(), newPlayGameName.getData().get(i).getH_g_p_max_bet_money(), newPlayGameName.getData().get(i).getH_g_p_max_bonus(),
+                                        newPlayGameName.getData().get(i).getH_g_p_max_bonus_mode(), newPlayGameName.getData().get(i).getH_g_p_not_bet_code(), newPlayGameName.getData().get(i).getH_g_p_singled_num(), newPlayGameName.getData().get(i).getH_g_p_max_bonus(), title);
+                            }
+                        }
+                    }
                     initObjd();
                     break;
                 default:
@@ -622,13 +610,14 @@ public class BuyChildActivty1 extends BaseActivity implements
         });
     }
 
-    public void getUrl() {
-        AjaxParams params = new AjaxParams();
-        params.put("Model", "System");
-        params.put("Action", "GetSystemConfig");
-        params.put("models", "HX_Game_Play");
-        wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
+    /**
+     * 游戏玩法
+     */
+    public void getUrl(String id) {
+       // wh.configCookieStore(RUser.cookieStore);
+        // wh.configCookieStore(RUser.cookieStore);
+        WiseHttp wh=new WiseHttp();
+        wh.post(Constants.getUrl() + Constants.game_play_new_xiangqing + id + ".json", new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();

@@ -9,6 +9,4 @@ public class UserDataModel {
 	public static String CORNER= "corner";
 	public static String Login_Name = "Login_Name";
 	public static String Password = "Password";
-	public static String RealName = "RealName";
-	public static String U_id = "uid";
 }

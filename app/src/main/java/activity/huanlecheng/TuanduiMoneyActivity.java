@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,7 +29,6 @@ import constants.Constants;
 import constants.RUser;
 import http.AjaxCallBack;
 import http.AjaxParams;
-import util.JsonUtil;
 import view.XListView;
 
 /**
@@ -39,13 +37,13 @@ import view.XListView;
  */
 
 public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickListener {
-    private static final String TAG = "TuanduiMoneyActivity";
+
     private Button button;
     private TextView title_textview;
     private XListView mlistview;
     private TuanduiAdapter tuanduiAdapter;
     private LinearLayout ll_change;
-    private List<TuanduiBean.DataBean.ListBean> mylist;
+    private List<MsgTuanBean> mylist;
     private String[] arr = new String[]{
             "全部状态", "已支付", "处理中", "已拒绝"
     };
@@ -64,7 +62,6 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tuan_money);
-        mylist = new ArrayList<>();
         initHead();
         initView();
         showPopupWindow();
@@ -90,6 +87,7 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
         ll_change.setOnClickListener(this);
         tuanduiAdapter = new TuanduiAdapter(getApplicationContext());
         mlistview.setAdapter(tuanduiAdapter);
+        getURL("0", "", "");
         mlistview.setPullLoadEnable(false);
         mlistview.setPullRefreshEnable(false);
         mlistview.setItemsCanFocus(false);
@@ -99,13 +97,6 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
         view_loading = (LinearLayout) findViewById(R.id.view_loading);
         view_load_fail = (LinearLayout) findViewById(R.id.view_load_fail);
         txt_neterr = (TextView) findViewById(R.id.txt_neterr);
-        txt_neterr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getURL("0", "", "");
-            }
-        });
-        getURL("0", "", "");
     }
 
     /**
@@ -146,7 +137,6 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
                 pw = new PopupWindow(mylistview, v.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
                 pw.setBackgroundDrawable(new BitmapDrawable(String.valueOf(R.drawable.denglu)));
                 pw.setOutsideTouchable(true);
-                pw.setFocusable(true);
                 pw.showAsDropDown(v, -2, 5);
             }
         });
@@ -160,11 +150,15 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
         //http://lf.client.cool/?Model=User&Action=WithdrawalsInquiry_List&type=0&pagenum=100&showpagenum=1&start_date=""&end_date=""
         //type          0：全部状态   1：已支付    2：处理中   3：已拒绝
         AjaxParams params = new AjaxParams();
-        params.put("type1", type);
-        params.put("date_start", starttime);
-        params.put("date_end", endtime);
+        params.put("Model", "User");
+        params.put("Action", "WithdrawalsInquiry_List");
+        params.put("type", type);
+        params.put("pagenum", "100");
+        params.put("showpagenum", "1");
+        params.put("start_date", starttime);
+        params.put("end_date", endtime);
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + "users/team_withdrawals_log", params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -191,6 +185,12 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
                 view_loading.setVisibility(View.GONE);
                 txt_neterr.setVisibility(View.VISIBLE);
                 txt_neterr.setText(Constants.NETERROR + "点击屏幕加载重试");
+                txt_neterr.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getURL("0", "", "");
+                    }
+                });
             }
         });
     }
@@ -203,17 +203,18 @@ public class TuanduiMoneyActivity extends BaseActivity implements View.OnClickLi
                 case 0:
                     loadingWindow.cancel();
                     String str = (String) msg.obj;
-                    Log.e(TAG, str);
-                    TuanduiBean tuanduiBean = JsonUtil.parseJsonToBean(str, TuanduiBean.class);
-                    if ("0".equals(tuanduiBean.getData().getCount())) {
+                    java.lang.reflect.Type type = new TypeToken<TuanduiBean>() {
+                    }.getType();
+                    TuanduiBean tuanduiBean = gson.fromJson(str, type);
+                    mylist = new ArrayList<>();
+                    if (tuanduiBean.getCount() == 0) {
                         mylist.clear();
-                        view_load_fail.setVisibility(View.VISIBLE);
-                        view_loading.setVisibility(View.GONE);
-                        txt_neterr.setVisibility(View.VISIBLE);
-                        txt_neterr.setText("暂无数据");
-                    }else{
-                        mylist.clear();
-                        mylist.addAll(tuanduiBean.getData().getList());
+                    } else {
+                        if (tuanduiBean.getMsg().size() != 0) {
+                            for (int i = 0; i < tuanduiBean.getMsg().size(); i++) {
+                                mylist.add(tuanduiBean.getMsg().get(i));
+                            }
+                        }
                     }
                     tuanduiAdapter.setData(mylist);
                     view_load_fail.setVisibility(View.GONE);

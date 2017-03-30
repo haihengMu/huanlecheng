@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -47,7 +46,6 @@ import util.ShowToast;
 import util.Utils;
 
 public class LoginActivity extends BaseActivity {
-    private static final String TAG = "LoginActivity";
     private EditText username;
     private EditText password;
     private EditText code;
@@ -277,7 +275,6 @@ public class LoginActivity extends BaseActivity {
                     break;
                 case 1:
                     String str = (String) msg.obj;
-                    Log.e(TAG, str);
                     if (str.indexOf("error") != -1) {
                         java.lang.reflect.Type type = new TypeToken<LoginErrorBean>() {
                         }.getType();
@@ -288,24 +285,22 @@ public class LoginActivity extends BaseActivity {
                         java.lang.reflect.Type type = new TypeToken<LoginGXBean>() {
                         }.getType();
                         LoginGXBean loginBean = gson.fromJson(str, type);
-                        userInfo.setU_id(loginBean.getData().getH_u_id());
-                        userInfo.setU_UserName(loginBean.getData().getH_u_name());
-                        userInfo.setU_Money(loginBean.getData().getH_u_balance());
-                        //   userInfo.setU_Head(ur.getU_Head());
-                        userInfo.setU_RebateA(loginBean.getData().getH_u_max_rebate());
-                        userInfo.setU_RebateB(loginBean.getData().getH_u_current_rebate());
-                        userInfo.setLogin_Name(loginBean.getData().getH_u_nickname());
-                        userInfo.setPassword(password.getText().toString());
-                        userInfo.setRealName(loginBean.getData().getH_u_real_name());
-                        if (Utils.isEmpty(userInfo.getCorner())) {
-                            userInfo.setCorner("元");
-                        }
-                        intent = new Intent(LoginActivity.this,
-                                MainActivity.class);
-                        MyApplication.getInstance().isAutoLogin(true);
-                        startActivity(intent);
-                        loadingWindow.cancel();
-                        finish();
+                            userInfo.setU_UserName(loginBean.getData().getH_u_name());
+                            userInfo.setU_Money(loginBean.getData().getH_u_balance());
+                         //   userInfo.setU_Head(ur.getU_Head());
+                            userInfo.setU_RebateA(loginBean.getData().getH_u_max_rebate());
+                            userInfo.setU_RebateB(loginBean.getData().getH_u_same_rebate());
+                            userInfo.setLogin_Name(loginBean.getData().getH_u_nickname());
+                            userInfo.setPassword(password.getText().toString());
+                            if (Utils.isEmpty(userInfo.getCorner())) {
+                                userInfo.setCorner("元");
+                            }
+                            intent = new Intent(LoginActivity.this,
+                                    MainActivity.class);
+                            MyApplication.getInstance().isAutoLogin(true);
+                            startActivity(intent);
+                            loadingWindow.cancel();
+                            finish();
                     }
                     break;
                 default:
@@ -313,5 +308,5 @@ public class LoginActivity extends BaseActivity {
             }
         }
 
-    };
-}
+    } ;
+    }

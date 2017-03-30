@@ -144,6 +144,7 @@ public class MyOrderFragment extends BaseFragment {
 				}
 			});
 			mRadioGroup_content.addView(columnTextView, i, params);
+
 		}
 	}
 
@@ -155,8 +156,8 @@ public class MyOrderFragment extends BaseFragment {
 		int count = userChannelList.size();
 		for (int i = 0; i < count; i++) {
 			Bundle data = new Bundle();
-			data.putString("id", channel_id);
-			data.putString("lo_id", userChannelList.get(i).getId());
+			data.putString("id", userChannelList.get(i).getId());
+			data.putString("lo_id", channel_id);
 			AllOrderFragment newfragment = new AllOrderFragment();
 			newfragment.setArguments(data);
 			fragments.add(newfragment);

@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,15 +23,12 @@ import java.util.List;
 
 import adapter.BankLieAdapter;
 import bean.BankLieBean;
-import bean.BindBankBean;
 import bean.TiXianNameBean;
 import bean.TixianBean;
 import constants.Constants;
 import constants.RUser;
 import http.AjaxCallBack;
 import http.AjaxParams;
-import util.JsonUtil;
-import util.ToastUtil;
 import util.Utils;
 
 /**
@@ -41,7 +37,6 @@ import util.Utils;
 
 public class Ti_money_activity extends BaseActivity {
 
-    private static final String TAG = "Ti_money_activity";
     private Button title_left_btn;
     private TextView title_textview;
     private TextView tv_money;
@@ -49,10 +44,10 @@ public class Ti_money_activity extends BaseActivity {
     private RelativeLayout rl_recharge;
     private PopupWindow mPopupWindow;
     private BankLieAdapter bankLieAdapter;
-    private List<BankLieBean.DataBean> mlist;
-    private TextView et_bank_address;
-    private TextView et_name;
-    private TextView et_bank_number;
+    private List<BankLieBean> mlist;
+    private EditText et_bank_address;
+    private EditText et_name;
+    private EditText et_bank_number;
     private String bankId;
     private TextView tv_queren;
     private EditText et_money;
@@ -61,18 +56,17 @@ public class Ti_money_activity extends BaseActivity {
     private TiXianNameBean tiXianNameBean;
     private TextView tv_names;
     private BankLieBean bankLieBean1;
-    private TextView tv_tvchongzhi;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tixian);
-        tv_names = (TextView) findViewById(R.id.tv_names);
+        tv_names= (TextView) findViewById(R.id.tv_names);
         mlist = new ArrayList<>();
         tiXianNameBean = new TiXianNameBean();
         bankLieBean1 = new BankLieBean();
-//         iniLoading();
+        // iniLoading();
         initHeadView();
         initView();
     }
@@ -80,9 +74,9 @@ public class Ti_money_activity extends BaseActivity {
 
     private void initView() {
         tv_money = (TextView) findViewById(R.id.tv_money);
-        et_bank_address = (TextView) findViewById(R.id.et_bank_address);
-        et_name = (TextView) findViewById(R.id.et_name);
-        et_bank_number = (TextView) findViewById(R.id.et_bank_number);
+        et_bank_address = (EditText) findViewById(R.id.et_bank_address);
+        et_name = (EditText) findViewById(R.id.et_name);
+        et_bank_number = (EditText) findViewById(R.id.et_bank_number);
         money = getIntent().getStringExtra("M_money");
         tv_money.setText(money);
         showPopupWindow();
@@ -94,19 +88,18 @@ public class Ti_money_activity extends BaseActivity {
      * @return
      */
     private ListView popupWindowList() {
-        final ListView popupwindowList = new ListView(this);
+        final ListView popupwindowList = new ListView(getApplicationContext());
         popupwindowList.setDividerHeight(0);
-        popupwindowList.setBackgroundColor(Color.rgb(63, 65, 78));
+        popupwindowList.setBackgroundColor(Color.rgb(63,65,78));
         // 去掉右侧垂直滑动条
         popupwindowList.setVerticalScrollBarEnabled(false);
         popupwindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                bankId = mlist.get(position).getId();
-                et_bank_number.setText(mlist.get(position).getCard());
-                et_bank_address.setText(mlist.get(position).getAddress());
-                et_name.setText(userInfo.getRealName());
-                tv_tvchongzhi.setText(mlist.get(position).getCard());
+                bankId = mlist.get(position).getH_U_B_L_Id();
+                et_bank_number.setText(mlist.get(position).getH_U_B_L_Bank_Account());
+                et_bank_address.setText(mlist.get(position).getH_U_B_L_Opening_Address());
+                et_name.setText(tv_names.getText());
                 mPopupWindow.dismiss();
             }
         });
@@ -123,14 +116,13 @@ public class Ti_money_activity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        getTiName();
+        getTiName();
         rl_recharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow = new PopupWindow(pwlist, v.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
                 //设置popupwindow点击外部可以被关闭
                 mPopupWindow.setOutsideTouchable(true);
-                mPopupWindow.setFocusable(true);
                 //设置pw的背景
                 mPopupWindow.setBackgroundDrawable(new BitmapDrawable(String.valueOf(R.drawable.back)));
                 //显示pw
@@ -141,7 +133,6 @@ public class Ti_money_activity extends BaseActivity {
 
     private void initHeadView() {
         title_left_btn = (Button) findViewById(R.id.title_left_btn);
-        tv_tvchongzhi = (TextView) findViewById(R.id.tv_tvchongzhi);
         title_left_btn.setBackgroundResource(R.drawable.aar);
         title_left_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,20 +160,61 @@ public class Ti_money_activity extends BaseActivity {
                 } else if (Utils.isEmpty(et_password.getText().toString())) {
                     showToast("请输入取款密码");
                 } else {
-                    loadingWindow.showDialog(Constants.tjing);
                     getTiXian(et_password.getText().toString(), bankId, et_money.getText().toString());
                 }
             }
         });
     }
 
-    public void getTiXian(String password, String bankid, String money) {
+    /**
+     * 绑定银行卡姓名
+     */
+    public void getTiName() {
         AjaxParams params = new AjaxParams();
-        params.put("bid", bankid);
-        params.put("money", money);
-        params.put("password", password);
+        params.put("Model", "User");
+        params.put("Action", "GetUserInfo");
+        params.put("r", "no");
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + "users/withdrawals", params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
+            @Override
+            public AjaxCallBack<String> progress(boolean progress, int rate) {
+                return super.progress(progress, rate);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+                Message msg = new Message();
+                msg.what = 2;
+                msg.obj = s;
+                handle.sendMessage(msg);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+            }
+        });
+    }
+
+    public void getTiXian(String password, String bankid, String money) {
+    /*    AjaxParams params = new AjaxParams();
+        params.put("Model", "User");
+        params.put("Action", "ApplicationWithdrawal_Add");
+        params.put("Data", "T_PassWord=" + password + "&bank=" + bankid + "&T_Money=" + money);*/
+        String url="T_PassWord=" + password + "&bank=" + bankid + "&T_Money=" + money;
+        wh.configCookieStore(RUser.cookieStore);
+        wh.get(Constants.getUrl()+"?Model=User&Action=ApplicationWithdrawal_Add&Data="+ URLEncoder.encode(url), new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -211,8 +243,10 @@ public class Ti_money_activity extends BaseActivity {
 
     public void getlieBank() {
         AjaxParams params = new AjaxParams();
+        params.put("Model", "User");
+        params.put("Action", "get_user_bank_list");
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + "users/get_user_banks", params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -246,28 +280,43 @@ public class Ti_money_activity extends BaseActivity {
             switch (msg.what) {
                 case 0:
                     String str = (String) msg.obj;
-                    Log.i(TAG, str);
-                    BankLieBean bankLieBean = JsonUtil.parseJsonToBean(str, BankLieBean.class);
-                    if (bankLieBean.getData().size() == 0) {
-                        rl_recharge.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                showToast("还没有绑定银行卡");
-                            }
-                        });
-                    } else {
-                        mlist = bankLieBean.getData();
+                    java.lang.reflect.Type type = new TypeToken<List<BankLieBean>>() {
+                    }.getType();
+                    if (!str.equals("[]")){
+                        mlist=gson.fromJson(str,type);
                         bankLieAdapter.setData(mlist);
+                    }else {
+                       rl_recharge.setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               showToast("还没有绑定银行卡");
+                           }
+                       });
+                        return;
                     }
                     break;
                 case 1:
-                    loadingWindow.dismiss();
                     //姓名在个人资料里传过来
                     String string = (String) msg.obj;
-                    Log.i(TAG, string);
-                    BindBankBean bindBankBean = JsonUtil.parseJsonToBean(string, BindBankBean.class);
-                    ToastUtil.showToast(Ti_money_activity.this, bindBankBean.getData());
-                    ToastUtil.showToast(Ti_money_activity.this, bindBankBean.getError());
+                    System.out.print(string);
+                    java.lang.reflect.Type type1=new TypeToken<TixianBean>(){}.getType();
+                   tixianBean=gson.fromJson(string,type1);
+                    if (tixianBean.getError()==1){
+                        showToast(tixianBean.getMsg());
+                    }else {
+                        showToast(tixianBean.getMsg());
+                    }
+                    break;
+                case 2:
+                    String s1 = (String) msg.obj;
+                    java.lang.reflect.Type type2 = new TypeToken<TiXianNameBean>() {
+                    }.getType();
+                    tiXianNameBean = gson.fromJson(s1, type2);
+                    if (!tiXianNameBean.getUserinfo().getU_WithdrawalsName().equals("")) {
+                        tv_names.setText(tiXianNameBean.getUserinfo().getU_WithdrawalsName());
+                    }else {
+
+                    }
                     break;
                 default:
             }

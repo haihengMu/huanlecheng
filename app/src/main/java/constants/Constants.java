@@ -21,13 +21,12 @@ public class Constants {
 	/**
 	 * 访问地址 base_url 正是地址 test_url 测试地址 是否使用测试baseUrl，true为是
 	 */
-	public static final String base_url = "http://hlc.client.cool/"; // http://hlc.client.cool/  http://hlc.hxgzs.net:81/ http://www.hlc18.com:88/
+	public static final String base_url =  "http://hlc.client.cool/";
 	public static final String img_url = "http://static.public.ms/pw/Template/Skin_1/images/activity/";
 	public static final String test_url = "http://182.92.224.199/";
 	public static boolean IS_TEST_URL = false;
 
 	public static final String logincode = "images/set_check_code?";
-	public static final String address = "static/model/public/json/address.json";
 	public static final String tuichulogin = "users/sign_out";
 	public static final String login = "users/login?";
 	public static final String ggx = "system/get_notice_details?";
@@ -47,15 +46,8 @@ public class Constants {
 	public static final String setsafe = "users/set_user_security_question";//设置安全问题
 	public static final String xiugsafe = "users/edit_user_security_question?";//修改安全问题
 	public static final String bankname = "/users/set_user_real_name?";//绑定银行账户姓名
-	public static final String getbanks = "/static/model/public/json/banks.json";//获取银行列表
-	public static final String setUserBank = "users/set_user_bank";//获取银行列表
-	public static final String getpaylist = "/users/get_pay_list";//获取充值列表
-	public static final String getbetLog = "/users/bet_log";//获取投注记录
-	public static final String getchaselog = "/users/chase_log";//获取追号记录
-	public static final String setUserRealName = "/users/set_user_real_name";//获取投注记录
-	public static final String addTeam = "users/add_team";//开户中心
-	public static final String teamManagement = "users/team_management";//会员管理
-	public static final String teamOnlineUsers = "users/team_online_users";//会员管理
+	public static final String qihao = "lottery/get_lottery_times?";//绑定银行账户姓名
+	public static final String touzhu = "lottery/add_bet?";//投注
 
 
 

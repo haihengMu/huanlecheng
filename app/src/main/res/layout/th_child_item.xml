@@ -11,6 +11,4 @@
         android:background="@drawable/icon_ball"
         android:textSize="12sp" />
 
-   
-
 </LinearLayout>

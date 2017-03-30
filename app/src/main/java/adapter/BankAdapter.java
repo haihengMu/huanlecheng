@@ -19,7 +19,6 @@ import java.util.List;
 
 import activity.huanlecheng.R;
 import bean.BankBean;
-import bean.BankResponseModel;
 import view.ViewHolder;
 
 public class BankAdapter extends BaseAdapter {
@@ -28,7 +27,7 @@ public class BankAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;
 	private DisplayImageOptions op;
-	private List<BankResponseModel.DataBean> mList;
+	private List<BankBean> mList;
 
 	public BankAdapter(Context pContext) {
 		this.mInflater = LayoutInflater.from(pContext);
@@ -38,7 +37,7 @@ public class BankAdapter extends BaseAdapter {
 
 	}
 
-	public void setData(List<BankResponseModel.DataBean> models) {
+	public void setData(List<BankBean> models) {
 		this.mList = models;
 		notifyDataSetChanged();
 	}
@@ -67,8 +66,8 @@ public class BankAdapter extends BaseAdapter {
 
 		TextView bottom_tt = ViewHolder.get(convertView, R.id.kaijiangText);
 
-		final BankResponseModel.DataBean gm = mList.get(position);
-		bottom_tt.setText(gm.getName());
+		final BankBean gm = mList.get(position);
+		bottom_tt.setText(gm.getB_C_Name());
 
 
 		return convertView;

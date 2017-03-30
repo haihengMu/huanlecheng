@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import activity.huanlecheng.R;
-import bean.MemberNowBean;
 import bean.MsgNowBean;
 
 /**
@@ -19,9 +18,9 @@ import bean.MsgNowBean;
 
 public class MemberNowAdapter extends BaseAdapter {
     private Context context;
-    private List<MemberNowBean.DataBean.ListBean> mlist;
+    private List<MsgNowBean> mlist;
 
-    public void setData(List<MemberNowBean.DataBean.ListBean> data) {
+    public void setData(List<MsgNowBean> data) {
         this.mlist = data;
         notifyDataSetChanged();
     }
@@ -35,15 +34,14 @@ public class MemberNowAdapter extends BaseAdapter {
             viewHolder.tv_username = (TextView) convertView.findViewById(R.id.tv_username);
             viewHolder.tv_money = (TextView) convertView.findViewById(R.id.tv_money);
             viewHolder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-            viewHolder.tv_shangji = (TextView) convertView.findViewById(R.id.tv_shangji);
+            //  viewHolder.tv_shangji= (TextView) convertView.findViewById(R.id.tv_shangji);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tv_username.setText(mlist.get(position).getH_u_name());
-        viewHolder.tv_money.setText(mlist.get(position).getH_u_balance());
-        viewHolder.tv_time.setText(mlist.get(position).getH_u_the_login_time());
-        viewHolder.tv_shangji.setText(mlist.get(position).getH_u_proxy_list());
+        viewHolder.tv_username.setText(mlist.get(position).getU_UserName());
+        viewHolder.tv_money.setText(mlist.get(position).getU_Money());
+        viewHolder.tv_time.setText(mlist.get(position).getU_TheLoginTime());
       /*  String a = mlist.get(position).getU_UpAgent();
         if (a.equals("[]")){
 
@@ -87,7 +85,7 @@ public class MemberNowAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        TextView tv_username, tv_money, tv_time, tv_shangji;
+        TextView tv_username, tv_money, tv_time;
     }
 
 

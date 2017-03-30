@@ -1,7 +1,6 @@
 package bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by Administrator on 2016/11/13.
@@ -9,69 +8,47 @@ import java.util.List;
 
 public class BankLieBean implements Serializable {
 
-    private List<DataBean> data;
+    /**
+     * H_U_B_L_Bank_Account : 6212***********3430
+     * H_U_B_L_Bank_Id : 1
+     * H_U_B_L_Id : 30109
+     * H_U_B_L_Opening_Address : 北京市 东城
+     */
 
-    public List<DataBean> getData() {
-        return data;
+    private String H_U_B_L_Bank_Account;
+    private String H_U_B_L_Bank_Id;
+    private String H_U_B_L_Id;
+    private String H_U_B_L_Opening_Address;
+
+    public String getH_U_B_L_Bank_Account() {
+        return H_U_B_L_Bank_Account;
     }
 
-    public void setData(List<DataBean> data) {
-        this.data = data;
+    public void setH_U_B_L_Bank_Account(String H_U_B_L_Bank_Account) {
+        this.H_U_B_L_Bank_Account = H_U_B_L_Bank_Account;
     }
 
-    public static class DataBean implements Serializable{
-        /**
-         * id : 3154
-         * bid : 1
-         * card : 1234***4321
-         * address : 500100
-         * isdefault : 1
-         */
+    public String getH_U_B_L_Bank_Id() {
+        return H_U_B_L_Bank_Id;
+    }
 
-        private String id;
-        private String bid;
-        private String card;
-        private String address;
-        private String isdefault;
+    public void setH_U_B_L_Bank_Id(String H_U_B_L_Bank_Id) {
+        this.H_U_B_L_Bank_Id = H_U_B_L_Bank_Id;
+    }
 
-        public String getId() {
-            return id;
-        }
+    public String getH_U_B_L_Id() {
+        return H_U_B_L_Id;
+    }
 
-        public void setId(String id) {
-            this.id = id;
-        }
+    public void setH_U_B_L_Id(String H_U_B_L_Id) {
+        this.H_U_B_L_Id = H_U_B_L_Id;
+    }
 
-        public String getBid() {
-            return bid;
-        }
+    public String getH_U_B_L_Opening_Address() {
+        return H_U_B_L_Opening_Address;
+    }
 
-        public void setBid(String bid) {
-            this.bid = bid;
-        }
-
-        public String getCard() {
-            return card;
-        }
-
-        public void setCard(String card) {
-            this.card = card;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getIsdefault() {
-            return isdefault;
-        }
-
-        public void setIsdefault(String isdefault) {
-            this.isdefault = isdefault;
-        }
+    public void setH_U_B_L_Opening_Address(String H_U_B_L_Opening_Address) {
+        this.H_U_B_L_Opening_Address = H_U_B_L_Opening_Address;
     }
 }

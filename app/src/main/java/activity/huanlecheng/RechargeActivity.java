@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,13 +27,10 @@ import adapter.BankCZAdapter;
 import adapter.BankLieAdapter;
 import bean.BankCZBean;
 import bean.BankCZQrenBean;
-import bean.GetPayListBean;
 import constants.Constants;
 import constants.RUser;
 import http.AjaxCallBack;
 import http.AjaxParams;
-import util.JsonUtil;
-import util.ToastUtil;
 
 /**
  * 快速充值页
@@ -43,7 +39,6 @@ import util.ToastUtil;
 
 public class RechargeActivity extends BaseActivity {
 
-    private static final String TAG = "RechargeActivity";
     private TextView tv_money;
     private String money;
     private Button title_left_btn;
@@ -57,38 +52,85 @@ public class RechargeActivity extends BaseActivity {
     private Object URl;
     private EditText ed_money;
     private ListView pwlist;
-    private ArrayList<GetPayListBean.DataBean> mlist;
+    private List<BankCZBean> mlist;
     private TextView textView2;
     private String paytye;
     private String bankid;
     private String imgstring;
     private String imgmsg;
-    private GetPayListBean getPayListBean;
-    private EditText et_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge);
         money = getIntent().getStringExtra("M_money");
+        textView2 = (TextView) findViewById(R.id.textView2);
         mlist = new ArrayList<>();
         initView();
+        showPopupWindow();
+
+
+    }
+
+    private ListView popupWindowList() {
+        final ListView popupwindowList = new ListView(getApplicationContext());
+        popupwindowList.setDividerHeight(0);
+        popupwindowList.setBackgroundColor(Color.rgb(63, 65, 78));
+        // 去掉右侧垂直滑动条
+        popupwindowList.setVerticalScrollBarEnabled(false);
+        popupwindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                textView2.setText(mlist.get(position).getH_T_P_T_Nickname());
+                if (mlist.get(position).getH_T_P_T_BankCode().size() == 0) {
+                    showToast("正在维护,请选择其他充值方式");
+                    mPopupWindow.dismiss();
+                } else {
+                    paytye = mlist.get(position).getH_T_P_T_Id();
+                    bankid = mlist.get(position).getH_T_P_T_BankCode().get(0).getId();
+                    mPopupWindow.dismiss();
+                }
+            }
+        });
+        return popupwindowList;
+    }
+
+    private void showPopupWindow() {
+        rl_recharge = (RelativeLayout) findViewById(R.id.rl_recharge);
+        pwlist = popupWindowList();
+        bankCZAdapter = new BankCZAdapter(getApplicationContext());
+        pwlist.setAdapter(bankCZAdapter);
         try {
             getLieBank();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        rl_recharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow = new PopupWindow(pwlist, v.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
+                //设置popupwindow点击外部可以被关闭
+                mPopupWindow.setOutsideTouchable(true);
+                //设置pw的背景
+//                mPopupWindow.setBackgroundDrawable(new BitmapDrawable(String.valueOf(R.drawable.changfangs)));
+                mPopupWindow.setBackgroundDrawable(new BitmapDrawable(String.valueOf(R.drawable.back)));
+                //显示pw
+                mPopupWindow.showAsDropDown(v, 2, -5);
+            }
+        });
     }
 
     private void initView() {
         title_left_btn = (Button) findViewById(R.id.title_left_btn);
         title_textview = (TextView) findViewById(R.id.title_textview);
+        tv_money = (TextView) findViewById(R.id.tv_money);
+
+        tv_money.setText(money);
         title_left_btn.setBackgroundResource(R.drawable.aar);
         title_textview.setText("充值");
         title_textview.setTextSize(22);
         tv_queren = (TextView) findViewById(R.id.tv_queren);
         ed_money = (EditText) findViewById(R.id.ed_money);
-        et_name = (EditText) findViewById(R.id.ed_name);
         tv_queren.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,10 +163,10 @@ public class RechargeActivity extends BaseActivity {
      */
     public void getLieBank() throws Exception {
         AjaxParams params = new AjaxParams();
+        params.put("Model", "Mobile");
+        params.put("Action", "get_pay_list");
         wh.configCookieStore(RUser.cookieStore);
-        String url = Constants.getUrl() + Constants.getpaylist;
-        Log.d(TAG, url);
-        wh.post(url, params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -159,11 +201,12 @@ public class RechargeActivity extends BaseActivity {
                 case 0:
                     loadingWindow.cancel();
                     String str = (String) msg.obj;
-                    Log.e(TAG, str);
+                    java.lang.reflect.Type type = new TypeToken<List<BankCZBean>>() {
+                    }.getType();
+                    Gson gson = new Gson();
+                    mlist = gson.fromJson(str, type);
                     if (!str.equals("[]")) {
-                        getPayListBean = JsonUtil.parseJsonToBean(str, GetPayListBean.class);
-                        bankid = getPayListBean.getData().get_$1().getList().get(0).getId();
-                        paytye = "1";
+                        bankCZAdapter.setData(mlist);
                     } else {
                         // mPopupWindow.dismiss();
                         rl_recharge.setOnClickListener(new View.OnClickListener() {
@@ -177,30 +220,22 @@ public class RechargeActivity extends BaseActivity {
                 case 1:
                     loadingWindow.cancel();
                     String string = (String) msg.obj;
-                    Log.e(TAG, string);
-                    BankCZQrenBean bankCZQrenBean = JsonUtil.parseJsonToBean(string, BankCZQrenBean.class);
-                    if (bankCZQrenBean.getData().getManual().getMsg().contains("订单创建成功")) {
-                        goActivity(bankCZQrenBean);
+                    java.lang.reflect.Type type1 = new TypeToken<BankCZQrenBean>() {
+                    }.getType();
+                    Gson gson1 = new Gson();
+                    BankCZQrenBean bankCZQrenBean = gson1.fromJson(string, type1);
+                    if (bankCZQrenBean.getError() == 1) {
+                        showToast(bankCZQrenBean.getMsg());
                     } else {
-                        ToastUtil.showToast(getApplicationContext(), "订单创建失败");
+                        imgstring = bankCZQrenBean.getImg();
+                        imgmsg = bankCZQrenBean.getMsg();
+                        initObject(imgstring, imgmsg);
                     }
                     break;
                 default:
             }
         }
     };
-
-    private void goActivity(BankCZQrenBean bankCZQrenBean) {
-        Intent intent = new Intent();
-        intent.setClass(this, BankCZQrenAvtivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("data", bankCZQrenBean);
-        bundle.putString("et_name", et_name.getText().toString());
-        bundle.putString("ed_money", ed_money.getText().toString());
-        intent.putExtras(bundle);
-        this.startActivity(intent);
-        finish();
-    }
 
     private void initObject(String imgstring, String imgmsg) {
         Intent intent = new Intent(getApplicationContext(), ActivityMap.class);
@@ -212,13 +247,13 @@ public class RechargeActivity extends BaseActivity {
     public void getURl(String paytye, String bankid, String paymoney) throws Exception {
         //["Model":"Mobile","Action":"ready_pay","paytype":paytype!,"bankid":bankid!,"paymoney":firstTF.text!]
         AjaxParams params = new AjaxParams();
-        params.put("bank_code", "ALIPAY");
-        params.put("remark", et_name.getText().toString());
-        params.put("type", paytye);//
-        params.put("bank_id", bankid);//
-        params.put("money", paymoney);//
+        params.put("Model", "Mobile");
+        params.put("Action", "ready_pay");
+        params.put("paytype", paytye);
+        params.put("bankid", bankid);
+        params.put("paymoney", paymoney);
         wh.configCookieStore(RUser.cookieStore);
-        wh.post(Constants.getUrl() + "users/deposit", params, new AjaxCallBack<String>() {
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -242,7 +277,6 @@ public class RechargeActivity extends BaseActivity {
             public void onFailure(Throwable t, int errorNo, String strMsg) {
                 super.onFailure(t, errorNo, strMsg);
                 loadingWindow.cancel();
-                ToastUtil.showToast(getApplicationContext(), strMsg);
             }
         });
     }

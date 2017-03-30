@@ -49,7 +49,7 @@ public class MyFragment extends BaseFragment implements OnClickListener {
     private ImageView iv_shezhi;
     private RelativeLayout setLayout, touzhuLayout, zhuihaoLayout,
             zhanghuLayout, zhanneiLayout, countszLayout, kscz, sdtx,
-            openlayout, rl_wdyhk;
+            openlayout;
 
     private TextView tv_kc, tv_sx, moneyTextView;
     private Button title_left_btn;
@@ -96,19 +96,11 @@ public class MyFragment extends BaseFragment implements OnClickListener {
         ll_right = (LinearLayout) showview.findViewById(R.id.ll_right);
         iv_kefu = (ImageView) showview.findViewById(R.id.iv_kefu);
         rl_yindao = (RelativeLayout) showview.findViewById(R.id.rl_yindao);
-//        rl_wdyhk = (RelativeLayout) showview.findViewById(R.id.wdyhk);
-//        rl_wdyhk.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // 我的银行卡
-//
-//            }
-//        });
         initView();
         iv_kefu.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), KefuActivity.class);
+                Intent intent=new Intent(getActivity(), KefuActivity.class);
                 startActivity(intent);
             }
         });
@@ -118,16 +110,16 @@ public class MyFragment extends BaseFragment implements OnClickListener {
         huiyuan_guanli.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                loadingWindow.showDialog(Constants.jiazaizhong);
-                Intent intent = new Intent(getActivity(), MemberActivity.class);
-                startActivity(intent);
+                loadingWindow.showDialog(Constants.jiazaizhong);
+                getUrlId();
+
             }
         });
         zaixian_huiyuan = (RelativeLayout) showview.findViewById(R.id.zaixian_huiyuan);
         zaixian_huiyuan.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MemberNowActivity.class);
+                Intent intent=new Intent(getActivity(), MemberNowActivity.class);
                 startActivity(intent);
 
             }
@@ -136,7 +128,7 @@ public class MyFragment extends BaseFragment implements OnClickListener {
         tuandui_qukuan.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TuanduiMoneyActivity.class);
+                Intent intent=new Intent(getActivity(), TuanduiMoneyActivity.class);
                 startActivity(intent);
 
             }
@@ -203,7 +195,6 @@ public class MyFragment extends BaseFragment implements OnClickListener {
 
             @Override
             public void onClick(View v) {
-//                showToast("抱歉, 暂未开放");
                 Intent intent = new Intent(getActivity(), RechargeActivity.class);
                 intent.putExtra("M_money", userInfo.getU_Money());
                 startActivity(intent);
@@ -235,9 +226,11 @@ public class MyFragment extends BaseFragment implements OnClickListener {
         il.displayImage(Constants.base_url + userInfo.getU_Head(), iv_head);
         tv_username.setText(userInfo.getU_UserName());
         moneyTextView.setText(userInfo.getU_Money());
+        IntentFilter inf = new IntentFilter();
+        inf.addAction("action.success");
+        getActivity().registerReceiver(bmdr, inf);
         return showview;
     }
-
     private void initView() {
         rl_yindao.setOnClickListener(new OnClickListener() {
             @Override
@@ -246,22 +239,32 @@ public class MyFragment extends BaseFragment implements OnClickListener {
             }
         });
         sharedPreferences = getActivity().getSharedPreferences("guideJmian3", Activity.MODE_PRIVATE);
-        guidejm = sharedPreferences.getString("guideJmian3", "");
+        guidejm = sharedPreferences.getString("guideJmian3","");
         try {
-            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-            packageInfostr = packageInfo.versionCode + "";
+            PackageInfo packageInfo=getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(),0);
+            packageInfostr = packageInfo.versionCode+"";
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        if (guidejm.equals(packageInfostr)) {//相等进来过
+        if (guidejm.equals(packageInfostr)){//相等进来过
             rl_yindao.setVisibility(View.GONE);
-        } else {//不想等 没进来过
+        }else {//不想等 没进来过
             rl_yindao.setVisibility(View.VISIBLE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("guideJmian3", "" + info.versionCode);
             editor.commit();
         }
     }
+
+    BroadcastReceiver bmdr = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("action.success")) {
+                getUrlId();
+            }
+        }
+    };
 
     public DisplayImageOptions getListOptions() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -307,4 +310,62 @@ public class MyFragment extends BaseFragment implements OnClickListener {
             default:
         }
     }
+
+    public void getUrlId() {
+        AjaxParams params = new AjaxParams();
+        params.put("Model", "User");
+        params.put("Action", "GetUserInfo");
+        params.put("r", "no");
+        wh.configCookieStore(RUser.cookieStore);
+        wh.post(Constants.getUrl(), params, new AjaxCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+                Message msg = new Message();
+                msg.what = 0;
+                msg.obj = s;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+                loadingWindow.cancel();
+                showToast("无法连接,请检查你的网络");
+            }
+        });
+    }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    loadingWindow.cancel();
+                    String str = (String) msg.obj;
+                    java.lang.reflect.Type type2 = new TypeToken<TiXianNameBean>() {
+                    }.getType();
+                    Gson gson1 = new Gson();
+                    TiXianNameBean tiXianNameBean = gson1.fromJson(str, type2);
+                    moneyTextView.setText(tiXianNameBean.getUserinfo().getU_Money());
+                    String u_id = tiXianNameBean.getUserinfo().getU_Id();
+                    Intent intent = new Intent(getActivity(), MemberActivity.class);
+                    intent.putExtra("a", u_id);
+                    startActivity(intent);
+                    break;
+                default:
+            }
+        }
+    };
 }

@@ -347,7 +347,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
-                    android:text="开奖号码:"
+                    android:text="开奖账号:"
                     android:textColor="#abffffff" />
 
                 <TextView
@@ -385,77 +385,48 @@
                     android:layout_marginLeft="10dp"
                     android:textSize="13sp" />
             </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/denglu"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_marginLeft="10dp"
-                    android:text="投注号码:"
-                    android:textColor="#abffffff" />
-
-                <TextView
-                    android:id="@+id/tv_tznum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/ll_chedand"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:gravity="center"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/denglu"
-                android:gravity="center">
+                android:background="@drawable/denglu">
 
                 <TextView
                     android:id="@+id/chedan_btnd"
+                    android:background="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
                     android:text="撤单"
                     android:textColor="@color/white" />
             </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/ll_chedan"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:gravity="center"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/denglu"
-                android:gravity="center">
+                android:background="@drawable/denglu">
 
                 <TextView
                     android:id="@+id/chedan_btn"
+                    android:background="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:text="全部撤单"
+                    android:text="全部撤回"
                     android:textColor="@color/white" />
             </LinearLayout>
-
-            <!--<Button-->
-            <!--android:id="@+id/goon_btn"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="30dp"-->
-            <!--android:background="@color/bg_blue"-->
-            <!--android:text="继续购彩"-->
-            <!--android:textColor="@color/white" />-->
+            <!--      <Button
+                      android:id="@+id/goon_btn"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="30dp"
+                      android:background="@color/bg_blue"
+                      android:text="继续购彩"
+                      android:textColor="@color/white" />-->
 
             <!--  <LinearLayout
                   android:layout_width="match_parent"
